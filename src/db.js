@@ -1,5 +1,5 @@
 const sqlite = require('sqlite3').verbose();
-const fs = require('fs');
+const fileExists = require('file-exists');
 
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
@@ -25,18 +25,10 @@ class DB {
     /**
      * Check if the database file exists
      * resolves true if it exists, rejects false if it does not
+     * Currently does not work
      */
     static dbExists() {
-        return new Promise((resolve, reject) => {
-            fs.access(`${DB_PATH}/db-${PRODUCTION ? 'production' : 'testing'}.db`, (err) => {
-                console.error('Error finding db: ' + (err ? 'true' : 'false'));
-                if(err) {
-                    resolve(false);
-                } else {
-                    resolve(true);
-                }
-            });
-        });
+        return fileExists(`${DB_PATH}/db-${PRODUCTION ? 'production' : 'testing'}.db`);
     }
 
     /**
@@ -112,14 +104,15 @@ class DB {
      * Format (null where): SELECT resultColumn FROM table
      * 
      * @param {string} resultColumn the  
-     * @param {*} table 
-     * @param {*} where 
+     * @param {string} table 
+     * @param {string} where 
      * @returns {Promise} of the this object of the operation
      */
     select(resultColumn, table, where) {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
                 if(where) {
+                    console.log('SelectWOp: ' + `SELECT ${resultColumn} FROM ${table} WHERE ${where}`);
                     this.db.all(`SELECT ${resultColumn} FROM ${table} WHERE ${where}`, [], (err, rows) => {
                         if(err) {
                             reject('Error selecting. op: ' + `SELECT ${resultColumn} FROM ${table}. err: ` + err);
@@ -143,30 +136,41 @@ class DB {
     /**
      * Use this function to insert an api key into the database
      * @param {string} newApiKey the api key to insert
+     * @param {string} apikeytable the table that api keys are stored in
      */
-    insertApiKey(newApiKey) {
+    insertApiKey(newApiKey, apikeytable) {
         return bcrypt.hash(newApiKey, SALT_ROUNDS)
         .then((res) => {
-            return this.insert(apiKey, res);
+            return this.insert(apikeytable == null ? 'apikeys' : apikeytable, `(\'${res}\')`);
         })
         .catch((err) => {
-            console.error('Failed to insert api key: ' + err);
+            console.error('Failed to insert api key. Error: ' + err);
         });
     }
 
+    /**
+     * Validate an api key
+     * @param {string} apiKey
+     * @returns {Promise<boolean>} a promise that resolves true if the key is validated. 
+     */
     validateKey(apiKey) {
         return new Promise((resolve, reject) => {
-            bcrypt.hash(apiKey, SALT_ROUNDS)
-            .then((res) => {
-                this.select('key', 'apikeys', `key = ${res}`)
-                .then((res) => {
-                    if(res.length === 0) {
-                        reject(false);
-                    } else {
+            this.select('key', 'apikeys').then((rows) => {
+                console.log(rows);
+                for(let i = 0; i < rows.length; i++) {
+                    console.log(rows[i]);
+                    if(bcrypt.compareSync(apiKey, rows[i].key)) {       //syncronously compare the hashes, there shouldnt be too many so it should be fine
+                        console.log('correctly compared');
                         resolve(true);
+                        return;
+                    } else {
+                        console.log('resolved false');
                     }
-                });
+                }
+                resolve(false);
+                
             });
+                
         });
     }
 }
