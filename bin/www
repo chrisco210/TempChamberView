@@ -8,28 +8,34 @@ if(DB.PRODUCTION) {
   //TODO setup production db
 } else {
   let db = new DB();
+  console.log('searching for db...');
   DB.dbExists()
   .then((res) => {
+    console.log(`Found db? ${res}`);
     if(res) {
+      console.log('Found database.  Selecting keys');
       db.select('key', 'apikeys')
-      .then((res) => {
-        console.log(res);
+      .then((res2) => {
+        console.log('Found database: ' + res2);
       })
       .catch((err) => {
         console.error('Failed to select keys.  Possible misconfigured database. info: ' + err);
       });
     } else {
-      console.error('Failed to read database, attempting to create new db');
+      console.warn('Failed to read database, attempting to create new db');
       let db = new DB();
+      console.log('Creating table apikeys')
       db.makeTable('apikeys', [{name: 'key', type: 'text'},])
-      .then((res) => {
-        return db.insert('apikeys', '(\'tempkey\')');
+      .then(() => {
+        console.log('inserting testkey as api key')
+        return db.insert('apikeys', '(\'testkey\')');
       })
       .then((res) => {
+        console.log('selecting keys');
         return db.select('key', 'apikeys');
       })
-      .then((res) => {
-        console.log(res);
+      .then((rows) => {
+        console.log('Selected ' + rows);
       })
       .catch((err) => {
         console.error(err);
@@ -37,7 +43,7 @@ if(DB.PRODUCTION) {
     }
   })
   .catch((err) => {
-    console.error(err);
+    console.error('caught error finding db: ' + err);
   });
 }
 
