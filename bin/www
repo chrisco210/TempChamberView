@@ -7,7 +7,7 @@
 var DB = require('../src/db');
 
 let db = new DB();
-db.select('keys', 'apikeys').then((rows) => {
+db.select('key', 'apikeys').then((rows) => {
   console.log(rows);
 });
 

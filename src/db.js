@@ -167,7 +167,7 @@ class DB {
                         console.log('resolved false');
                     }
                 }
-                resolve(false);
+                reject(false);
                 
             });
                 
