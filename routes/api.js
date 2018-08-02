@@ -8,7 +8,7 @@ const ACCESS_KEY = 'tempkey';   //TODO replace this with sqlite
 /* GET api data. */
 router.post('/', function(req, res, next) {
 
-    if(req.headers['authorization'] !== ACCESS_KEY) {
+    if(req.headers.authorization !== ACCESS_KEY) {
         res.statusCode = 401;
         res.send('401: Unauthorized');
     } else {
@@ -19,9 +19,11 @@ router.post('/', function(req, res, next) {
 
 
 router.get('/', (req, res, next) => {
-    if(req.headers['authorization'] !== ACCESS_KEY) {
+    if(req.headers.authorization !== ACCESS_KEY) {
+        res.statusCode = 401;
         res.send('401: Unauthorized');
     } else {
+        res.statusCode = 404;
         res.send('This route does not accept GET requests.');
     }
 });

@@ -1,6 +1,47 @@
 #!/usr/bin/env node
 
 /**
+ * Setup database connection
+ */
+var DB = require('../src/db');
+if(DB.PRODUCTION) {
+  //TODO setup production db
+} else {
+  let db = new DB();
+  DB.dbExists()
+  .then((res) => {
+    if(res) {
+      db.select('key', 'apikeys')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error('Failed to select keys.  Possible misconfigured database. info: ' + err);
+      });
+    } else {
+      console.error('Failed to read database, attempting to create new db');
+      let db = new DB();
+      db.makeTable('apikeys', [{name: 'key', type: 'text'},])
+      .then((res) => {
+        return db.insert('apikeys', '(\'tempkey\')');
+      })
+      .then((res) => {
+        return db.select('key', 'apikeys');
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+}
+
+/**
  * Module dependencies.
  */
 
