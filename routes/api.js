@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 const DB = require('../src/db');
+const redacted = require('../redacted.js');
+const request = require('request-promise');
+
 var db = new DB();
 
 const ACCESS_KEY = 'tempkey';   //TODO replace this with sqlite 
@@ -39,6 +42,19 @@ router.post('/instructions', (req, res, next) => {
 //sensor data
 router.get('/sensors', (req, res, next) => {
     validateHeader(req.headers).then((validated) => {
+
+        var options = {
+            uri: '',
+            qs: {
+            },
+            headers: {
+                'User-Agent': 'Request-Promise',
+                'authentication': 'tempkey'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+
+
         res.send(JSON.stringify([{todo: 'figure out how to get sensor data here'}]));     //TODO
     }).catch((reason) => {
         console.error(reason);
