@@ -1,0 +1,28 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="Control panel for the WickedDevice temperature calibration chamber">
+        <meta name="keywords" content="Control, Temperature, Humidity, Air Quality, Egg, Wicked Device">
+        <meta name="author" content="Chris Rachlinski">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="application-name" content="TempChamberControl">
+        <title>TempChamber Control Panel</title>
+        <link rel="stylesheet" href="stylesheets/materialize.css">
+        <link rel="stylesheet" href="stylesheets/style.css">
+    </head>
+    <body>
+        <script type="text/javascript" src="javascripts/materialize.js"></script>
+
+        <nav class="blue ">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo margin-left">WickedDevice</a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <p class="flow-text">Cookie:<%=JSON.stringify(session.cookie)%></p>
+            <p class="flow-text">SessID:<%=session.id%></p>
+            <p class="flow-text">Session:<%=JSON.stringify(session)%></p>
+        </div>
+    </body>
+</html>

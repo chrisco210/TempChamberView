@@ -106,16 +106,15 @@ class DB {
      * @param {string} resultColumn the  
      * @param {string} table 
      * @param {string} where 
-     * @returns {Promise} of the this object of the operation
+     * @returns {Promise<array>} of the this object of the operation
      */
     select(resultColumn, table, where) {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
                 if(where) {
-                    console.log('SelectWOp: ' + `SELECT ${resultColumn} FROM ${table} WHERE ${where}`);
                     this.db.all(`SELECT ${resultColumn} FROM ${table} WHERE ${where}`, [], (err, rows) => {
                         if(err) {
-                            reject('Error selecting. op: ' + `SELECT ${resultColumn} FROM ${table}. err: ` + err);
+                            reject('Error selecting. op: ' + `SELECT ${resultColumn} FROM ${table} WHERE ${where}. err: ` + err);
                         } else {
                             resolve(rows);
                         }
@@ -171,6 +170,58 @@ class DB {
                 
             });
                 
+        });
+    }
+
+    /**
+     * Generate and insert a user given their username, password, if they are an admin, and the table to insert into
+     * @param {string} username username
+     * @param {string} password unhashed password
+     * @param {boolean} isAdmin if they are an admin
+     * @param {string} tableName the name of the table
+     */
+    generateUser(username, password, isAdmin, tableName) {
+        return new Promise((resolve, reject) => {
+            bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
+                this.insert(tableName, `(\'${username}\', \'${hash}\', ${isAdmin ? 1 : 0})`).then((res) => {
+                    resolve(res);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    reject(err);
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err);
+            });
+            
+        });
+    }
+
+    /**
+     * Verify that a password matches the one stored in the database
+     * @param {string} username the supplied username
+     * @param {string} suppliedPassword the supplied password
+     * @returns {Promise<boolean>} resolves if correct, rejects if incorrect
+     */
+    validatePassword(username, suppliedPassword) {
+        return new Promise((resolve, reject) => {
+            this.select('password', 'users', `username=\'${username}\'`).then((rows) => {
+                bcrypt.compare(suppliedPassword, rows[0].password).then((isCorrect) => {
+                    if(isCorrect) {
+                        resolve(true);
+                    } else {
+                        reject(false);
+                    }
+                }).catch((err) => {
+                    console.error(err);
+                    reject(err);
+                });
+            }).catch((err) => {
+                console.error(err);
+                reject(err);
+            });
         });
     }
 }

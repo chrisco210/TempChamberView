@@ -5,21 +5,23 @@ const DB = require('./src/db');
 
 let db = new DB();
 
-db.validateKey('tempkey').then((res) => {
-    console.log('Validated Key: ' + res);
-})
-.catch((err) => {
-    console.log(err);
-});
-
-
-/*
 
 db.makeTable('apikeys', [{name: 'key', type: 'text', primary: true}]).then((res) => {
     return db.insertApiKey('tempkey', 'apikeys');
 }).then((res) => {
-    db.select('key', 'apikeys').then((row) => {
-        console.log(row); 
+    return db.select('key', 'apikeys').then((rows) => {
+        console.log(rows);
     });
 });
-*/
+db.makeTable('users', [
+                       {name: 'username', type: 'TEXT',},
+                       {name: 'password', type: 'TEXT',},
+                       {name: 'admin', type: 'INTEGER',},]
+).then((res) => {
+    return db.generateUser('root', 'password', true, 'users');
+})
+.then((res) => {
+    db.select('*', 'users').then((rows) => {
+        console.log(rows);
+    });
+});

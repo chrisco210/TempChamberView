@@ -95,8 +95,8 @@ router.post('/sensors', (req, res, next) => {
 
 //Documentation page
 router.get('/', (req, res, next) => {
-    res.sendFile(path.resolve('views/api.html'));
-});
+    res.render('api');
+});     
 
 function validateHeader(headers) {
     return new Promise((resolve, reject) => {

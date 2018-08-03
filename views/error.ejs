@@ -1,0 +1,9 @@
+<html>
+    <head>
+        <title><%=error.status + ': ' + error.message%></title>
+    </head>
+    <body>
+        <h1><%= error.status + ': ' + error.message %></h1>
+        <%= error.stack %>
+    </body>
+</html>
