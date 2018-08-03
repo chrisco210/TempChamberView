@@ -3,11 +3,11 @@ var router = express.Router();
 var path = require('path');
 const DB = require('../src/db');
 const redacted = require('../redacted.js');
-const request = require('request-promise');
+const request = require('request');
 
 var db = new DB();
 
-const ACCESS_KEY = 'tempkey';   //TODO replace this with sqlite 
+const EGG_SERIAL = 'egg0029fd96831a3060';
 
 router.post('/', function(req, res, next) {
     validateHeader(req.headers).then((validated) => {
@@ -40,33 +40,54 @@ router.post('/instructions', (req, res, next) => {
 });
 
 //sensor data
+/*
 router.get('/sensors', (req, res, next) => {
     validateHeader(req.headers).then((validated) => {
 
-        var options = {
-            uri: '',
+        let options = {
+            uri: 'https://airqualityegg.wickeddevice.com/api/v1/most-recent/messages/device/egg0029fd96831a3060',
             qs: {
             },
             headers: {
-                'User-Agent': 'Request-Promise',
-                'authentication': 'tempkey'
-            },
-            json: true // Automatically parses the JSON string in the response
+                'accept': 'application/json',
+                'Authentication': 'Bearer ' + redacted.AQE_API_KEY,
+            }
         };
 
-
-        res.send(JSON.stringify([{todo: 'figure out how to get sensor data here'}]));     //TODO
+        request(options).then((received) => {
+           
+        }).catch((err) => {
+            console.error(err);
+            res.send(err);
+        });
     }).catch((reason) => {
-        console.error(reason);
+        console.error(JSON.stringify(reason));
         res.statusCode = 401;
         res.send('401 Unauthorized: ' + reason);
     });
-});
-router.post('/instructions', (req, res, next) => {
+});*/
+router.post('/sensors', (req, res, next) => {
     validateHeader(req.headers).then((validated) => {
-        res.send(JSON.stringify([{todo: 'figure out how to get sensor data here'}]));     //TODO
+        let options = {
+            method: 'GET',
+            uri: 'https://airqualityegg.wickeddevice.com/api/v1/most-recent/messages/device/egg0029fd96831a3060',
+            headers: {
+                'User-Agent': 'request',
+                'Authorization': `Bearer ${redacted.AQE_API_KEY}`,
+            }
+        };
+
+        request(options, (err, resp, body) => {
+            if(err) {
+                res.statusCode = 401;
+                res.send(resp + body);
+            } else {
+                console.log(resp);
+                console.log(body);
+                res.send(body);
+            }
+        });
     }).catch((reason) => {
-        console.error(reason);
         res.statusCode = 401;
         res.send('401 Unauthorized: ' + reason);
     });

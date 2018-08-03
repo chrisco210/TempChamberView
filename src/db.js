@@ -41,7 +41,7 @@ class DB {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
                 let fields = '';
-    
+
                 cols.forEach(element => {
                     //generate modifier fields for the element
                     let modifiers = '';
