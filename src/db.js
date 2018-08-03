@@ -101,7 +101,7 @@ class DB {
     /**
      * Perform a select query from the database 
      * Format: SELECT resultColumn FROM table WHERE where 
-     * Format (null where): SELECT resultColumn FROM table
+     * Format (null where): SELECT resul3tColumn FROM table
      * 
      * @param {string} resultColumn the  
      * @param {string} table 
@@ -212,7 +212,7 @@ class DB {
                     if(isCorrect) {
                         resolve(true);
                     } else {
-                        reject(false);
+                        reject('incorrect password');
                     }
                 }).catch((err) => {
                     console.error(err);

@@ -40,32 +40,10 @@ router.post('/instructions', (req, res, next) => {
 });
 
 //sensor data
-/*
+
 router.get('/sensors', (req, res, next) => {
-    validateHeader(req.headers).then((validated) => {
-
-        let options = {
-            uri: 'https://airqualityegg.wickeddevice.com/api/v1/most-recent/messages/device/egg0029fd96831a3060',
-            qs: {
-            },
-            headers: {
-                'accept': 'application/json',
-                'Authentication': 'Bearer ' + redacted.AQE_API_KEY,
-            }
-        };
-
-        request(options).then((received) => {
-           
-        }).catch((err) => {
-            console.error(err);
-            res.send(err);
-        });
-    }).catch((reason) => {
-        console.error(JSON.stringify(reason));
-        res.statusCode = 401;
-        res.send('401 Unauthorized: ' + reason);
-    });
-});*/
+    res.send('Use POST to get sensor data');
+});
 router.post('/sensors', (req, res, next) => {
     validateHeader(req.headers).then((validated) => {
         let options = {

@@ -15,11 +15,15 @@ router.post('/', (req, res, next) => {
     let pwd = req.body.password;
 
     db.validatePassword(username, pwd).then((success) => {
+        req.session.auth = {authenticated: true, 
+                            key: 0,
+                            username: username,
+                            note: 'This will be relpaced by a more secure auth system',
+                        };
         res.send('Successfully validated');
     }).catch((err) => {
         res.send('Failed to authenticate: ' + err);
     });
-    
 });
 
 //logout here

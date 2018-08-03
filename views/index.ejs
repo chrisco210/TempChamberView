@@ -12,14 +12,20 @@
     </head>
     <body>
         <script type="text/javascript" src="javascripts/materialize.js"></script>
-
+        <script type="text/javascript" src="javascript/sensordata.js"></script>
+        
         <nav class="blue ">
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo margin-left">WickedDevice</a>
+                <a href="#" class="brand-logo margin-left">Wicked Device</a>
             </div>
         </nav>
 
         <div class="container">
+            <div class="row">
+                <%=JSON.stringify(data)%>
+            </div>
+
+            <h1>Session Information (debug)</h1>
             <p class="flow-text">Cookie:<%=JSON.stringify(session.cookie)%></p>
             <p class="flow-text">SessID:<%=session.id%></p>
             <p class="flow-text">Session:<%=JSON.stringify(session)%></p>
