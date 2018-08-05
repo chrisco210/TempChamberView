@@ -1,11 +1,16 @@
+//Sets if the database is in production mode.  Set this BEFORE running create-database.js
+const PRODUCTION = false;   
+//Sets the path of the database.  Don't change unless you know what you are doing.   
+const DB_PATH = '.';        
+
+//Do not modify beyond this point
 const sqlite = require('sqlite3').verbose();
 const fileExists = require('file-exists');
-
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
+ 
 
-const PRODUCTION = false;
-const DB_PATH = '.';
+
 
 
 /**
