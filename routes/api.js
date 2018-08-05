@@ -68,19 +68,15 @@ router.post('/sensors', (req, res, next) => {
                     serialNum: parsedBody.serial_num,
                 };
 
-
-                console.log(parsedBody);
-
                 ['temperature', 'humidity'].forEach((sensor) => {
                     console.log(sensor);
                     if(parsedBody[sensor]) {
                         let sensorData = parsedBody[sensor];
                         sendObj.data.push({name: sensor, lastReport: sensorData.date, value: sensorData['converted-value'], units: sensorData['converted-units']});
                     } else {
-                        console.error(`Failed to find sensor ${sensor}`);
+                        console.error(`Failed to find sensor ${sensor}. Not including`);
                     }
                 });
-                
 
                 res.send(sendObj);
             }

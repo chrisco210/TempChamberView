@@ -9,6 +9,8 @@
         <title>TempChamber Control Panel</title>
         <link rel="stylesheet" href="stylesheets/materialize.css">
         <link rel="stylesheet" href="stylesheets/style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     </head>
     <body>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -18,21 +20,54 @@
         
         
         <nav class="blue ">
-            <div class="nav-wrapper">
-                <a href="#" class="brand-logo margin-left">Wicked Device</a>
+            <div class="nav-wrapper container">
+                <a href="#" class="brand-logo">Wicked Device</a>
+                <ul id="" class="right">
+                    <li><a class="white-text" href="/login">Login</a></li>
+                    <li><a class="white-text" href="/api">API</a></li>
+                </ul>
             </div>
         </nav>
 
         <div class="container">
-            <div class="row" id="data-display">
-            </div>
-
-            <h1>Session Information (debug)</h1>
-            <% if (session) { %>
-            <p class="flow-text">Cookie:<%=JSON.stringify(session.cookie)%></p>
-            <p class="flow-text">SessID:<%=session.id%></p>
-            <p class="flow-text">Session:<%=JSON.stringify(session)%></p>
-            <% }%>
+            <div class="row" id="sensor-display">
+                <div class="col s12">
+                    <ul class="tabs" id="sensor-tabs">
+                    </ul>
+                </div>
+            </div>            
         </div>
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large blue accent-2" onclick="updateSensorData()">
+                <i class="material-icons">refresh</i>
+            </a>
+        </div>
+
+        <footer class="page-footer blue">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5>Session Information (debug)</h5>
+                        <% if (session) { %>
+                        <p>Cookie:<%=JSON.stringify(session.cookie)%></p>
+                        <p>SessID:<%=session.id%></p>
+                        <p>Session:<%=JSON.stringify(session)%></p>
+                        <% }%>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5>Links</h5>
+                        <ul>
+                            <li><a class="white-text" href="/login">Login</a></li>
+                            <li><a class="white-text" href="/api">API</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    © 2018 Wicked Device
+                </div>
+            </div>
+        </footer>
     </body>
 </html>
