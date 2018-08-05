@@ -1,9 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var path = require('path');
+const express = require('express');
+const router = express.Router();
+const path = require('path');
 const DB = require('../src/db');
 const redacted = require('../redacted.js');
 const request = require('request');
+const moment = require('moment');
 
 var db = new DB();
 
@@ -60,9 +61,28 @@ router.post('/sensors', (req, res, next) => {
                 res.statusCode = 401;
                 res.send(resp + body);
             } else {
-                console.log(resp);
-                console.log(body);
-                res.send(body);
+                let parsedBody = JSON.parse(body);
+
+                let sendObj = {data: [], 
+                    time: moment().format(),
+                    serialNum: parsedBody.serial_num,
+                };
+
+
+                console.log(parsedBody);
+
+                ['temperature', 'humidity'].forEach((sensor) => {
+                    console.log(sensor);
+                    if(parsedBody[sensor]) {
+                        let sensorData = parsedBody[sensor];
+                        sendObj.data.push({name: sensor, lastReport: sensorData.date, value: sensorData['converted-value'], units: sensorData['converted-units']});
+                    } else {
+                        console.error(`Failed to find sensor ${sensor}`);
+                    }
+                });
+                
+
+                res.send(sendObj);
             }
         });
     }).catch((reason) => {

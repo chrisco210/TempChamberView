@@ -11,8 +11,11 @@
         <link rel="stylesheet" href="stylesheets/style.css">
     </head>
     <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="javascripts/ejs.js"></script>
         <script type="text/javascript" src="javascripts/materialize.js"></script>
-        <script type="text/javascript" src="javascript/sensordata.js"></script>
+        <script type="text/javascript" src="javascripts/sensordata.js"></script>
+        
         
         <nav class="blue ">
             <div class="nav-wrapper">
@@ -21,14 +24,15 @@
         </nav>
 
         <div class="container">
-            <div class="row">
-                <%=JSON.stringify(data)%>
+            <div class="row" id="data-display">
             </div>
 
             <h1>Session Information (debug)</h1>
+            <% if (session) { %>
             <p class="flow-text">Cookie:<%=JSON.stringify(session.cookie)%></p>
             <p class="flow-text">SessID:<%=session.id%></p>
             <p class="flow-text">Session:<%=JSON.stringify(session)%></p>
+            <% }%>
         </div>
     </body>
 </html>
