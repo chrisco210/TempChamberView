@@ -1,3 +1,4 @@
 ./production.db
 ./redacted.js
 redacted.js
+node_modules/
