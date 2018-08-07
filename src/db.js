@@ -10,8 +10,18 @@ const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
  
 //Permissions
-const PERMISSIONS = {READ_SENSOR: 1, READ_INSTRUCTION: 2, WRITE_INSTRUCTION: 3};
+const PERMISSIONS = {
+    READ_SENSOR: 1,         //Read data from sensors
+    READ_INSTRUCTION: 2,    //Read instructions from queue
+    WRITE_INSTRUCTION: 3,        //write instructions to queue.  Also requires authentication in session
+};
 
+const SQLITE_DATATYPES = {
+    TEXT: 'TEXT',
+    INTEGER: 'NUMBER',
+    REAL: 'REAL',
+    BLOB: 'BLOB'
+};
 
 
 /**
@@ -86,14 +96,51 @@ class DB {
      * Insert into the table 
      * Format: INSERT INTO tableName VALUES values
      * Do not use this for api keys - use insertApiKey
-     * @param {string} tableName 
-     * @param {string} values 
+     * @param {string} tableName the name of the table to insert into
+     * @param {string | {value: any, type: string}[]} values the values to insert. can either be a standard sqlite
+     * insert string, or an array of the objects shown below, where the type should be one of db.SQLITE_DATATYPES.  
+     * Note that passing a string is deprecated, and you should use the array
+     * @param {boolean} useValuesArray if true, values can be an array instead of string
      * @returns {Promise} the this object of the operation
      */
-    insert(tableName, values) {
+    insert(tableName, values, useValuesArray) {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
-                this.db.run(`INSERT INTO ${tableName} VALUES ${values}`, [], (err) => {
+                let insertStr = '';
+
+                //make sure they passed an array when choosing to use a values array
+                if(useValuesArray && values instanceof array) {
+                    insertStr += '(';
+                    //generate an insert string based on the values passed
+                    for(let i = 0; i < values.length; i++) {
+                        switch(values[i].type) {
+                            case SQLITE_DATATYPES.BLOB:  
+                                insertStr += values[i].value;
+                                break;
+                            case SQLITE_DATATYPES.INTEGER:
+                                insertStr += '' + values[i].value;
+                                break;
+                            case SQLITE_DATATYPES.REAL:
+                                insertStr += '' + values[i].value;
+                                break;
+                            case SQLITE_DATATYPES.TEXT:
+                                insertStr += '\'' + values[i].value + '\'';
+                                break;
+                            default:
+                                console.error('illegal datatype in insert statement');
+                                break;
+                        }
+                        if(i !== values.length - 1) {
+                            insertStr += ',';
+                        }
+                    }
+                    insertStr += ')';
+                } else {
+                    console.error('WARN: Passing strings to db.insert is deprecated');
+                    insertStr = values;
+                }
+
+                this.db.run(`INSERT INTO ${tableName} VALUES ${insertStr}`, [], (err) => {
                     if(err) {
                         reject('Error inserting into table. op: ' + `INSERT INTO ${tableName} VALUES ${values}. err: ` + err);
                     } else {
@@ -259,3 +306,4 @@ class DB {
 module.exports = DB;
 module.exports.PRODUCTION = PRODUCTION;
 module.exports.PERMISSIONS = PERMISSIONS;
+module.exports.SQLITE_DATATYPES = SQLITE_DATATYPES;

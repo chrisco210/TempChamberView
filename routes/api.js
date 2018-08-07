@@ -5,10 +5,11 @@ const DB = require('../src/db');
 const redacted = require('../redacted.js');
 const request = require('request');
 const moment = require('moment');
-const instrManag = require('../src/instruction-manager');
+const instructionMan = require('../src/instruction-manager');
 
 var db = new DB();
-var manager = new instrManag.Manager();
+
+var manager = new instructionMan.Manager();
 
 
 const EGG_SERIAL = 'egg00802fbeaf1b0130';
@@ -25,11 +26,11 @@ router.post('/', function(req, res, next) {
 
 //Recent instructions page routes
 router.get('/instructions', (req, res, next) => {
-    res.send('Temp: ' + JSON.stringify(manager.getInstructionStack()));
+    res.send(JSON.stringify(manager.getInstructionStack()));
 });
 router.post('/instructions/recent', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.READ_INSTRUCTION).then((validated) => {
-        res.send(JSON.stringify(manager.getInstructionStack()));     //TODO
+        
     }).catch((reason) => {
         console.error(reason);
         res.statusCode = 401;
@@ -37,9 +38,15 @@ router.post('/instructions/recent', (req, res, next) => {
     });
 });
 router.post('/instructions/push', (req, res, next) => {
-    validateHeader(req.headers).then((validated) =>{
-        console.log(req.body);
-        res.send('Received instruction push req. ' + req.body);
+    validateHeader(req.headers, DB.PERMISSIONS.WRITE_INSTRUCTION).then((validated) => {
+        if(req.session.auth) {
+            console.log(req.body);
+            res.send('Received instruction push req. ' + req.body);
+        } else {
+            res.statusCode = 401;
+            res.send('You must be signed in to push instructions.');
+        }
+        
     }).catch((reason) => {
         console.error(reason);
         res.statusCode = 400;

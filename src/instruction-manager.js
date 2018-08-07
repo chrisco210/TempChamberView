@@ -1,5 +1,3 @@
-//Stack containing all queued instructions, length - 1 is most recent instruction
-var instructionStack = [];
 
 const OPERATIONS = {SET_TEMP: {options: ['turns'], name: 'settemp'}, BLINK_LED: {options: [], name: 'blink'}};
 
@@ -7,12 +5,20 @@ const OPERATIONS = {SET_TEMP: {options: ['turns'], name: 'settemp'}, BLINK_LED: 
  * Instruction manager
  */
 class Manager {
+
+    /**
+     * Construct an instruction manager 
+     */
+    constructor() {
+        this.instructionStack = [];
+    }
+
     /**
      * Push an instruction onto the instruction stack
      * @param {Instruction} instruction 
      */
     pushInstruction(instruction) {
-        instructionStack.push(instruction);
+        this.instructionStack.push(instruction);
     }
 
     /**
@@ -20,14 +26,14 @@ class Manager {
      * @returns the most recent instruction from the stack
      */
     getMostRecentInstruction() {
-        return instructionStack[instructionStack.length - 1];
+        return this.instructionStack[instructionStack.length - 1];
     }
 
     /**
      * Get the full instruction stack
      */
     getInstructionStack() {
-        return instructionStack;
+        return this.instructionStack;
     }
 }
 
