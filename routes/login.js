@@ -20,15 +20,16 @@ router.post('/', (req, res, next) => {
                             username: username,
                             note: 'This will be relpaced by a more secure auth system',
                         };
-        res.send('Successfully validated');
+        res.redirect('/');      //if authenticated, send to home page
     }).catch((err) => {
         res.send('Failed to authenticate: ' + err);
     });
 });
 
 //logout here
-router.post('/logout', (req, res, next) => {
-    
+router.get('/logout', (req, res, next) => {
+    delete req.session.auth;
+    res.send('Logged out');
 });
 
 module.exports = router;

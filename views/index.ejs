@@ -21,9 +21,15 @@
         
         <nav class="blue z-depth-0 ">
             <div class="nav-wrapper container">
-                <a href="#" class="brand-logo">Wicked Device</a>
+                <a href="#" class="brand-logo">Wicked Device 
+                    <%if(session.auth) {%>
+                        <%= '- ' + session.auth.username%>
+                    <%} else {%>
+                        <%= '- You should not be here. Report this bug.' %> 
+                    <%}%>
+                </a>
                 <ul id="" class="right">
-                    <li><a class="white-text" href="/login">Login</a></li>
+                    <li><a class="white-text" href="/login/logout">Logout</a></li>
                     <li><a class="white-text" href="/api">API</a></li>
                 </ul>
             </div>

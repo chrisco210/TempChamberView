@@ -5,8 +5,11 @@ const DB = require('../src/db');
 const redacted = require('../redacted.js');
 const request = require('request');
 const moment = require('moment');
+const instrManag = require('../src/instruction-manager');
 
 var db = new DB();
+var manager = new instrManag.Manager();
+
 
 const EGG_SERIAL = 'egg00802fbeaf1b0130';
 
@@ -20,33 +23,37 @@ router.post('/', function(req, res, next) {
     });
 });
 
-//Recent instructions page
+//Recent instructions page routes
 router.get('/instructions', (req, res, next) => {
-    validateHeader(req.headers).then((validated) => {
-        res.send(JSON.stringify([{todo: 'look into where instructions are to be kept, where does the array go'}]));     //TODO
+    res.send('Temp: ' + JSON.stringify(manager.getInstructionStack()));
+});
+router.post('/instructions/recent', (req, res, next) => {
+    validateHeader(req.headers, DB.PERMISSIONS.READ_INSTRUCTION).then((validated) => {
+        res.send(JSON.stringify(manager.getInstructionStack()));     //TODO
     }).catch((reason) => {
         console.error(reason);
         res.statusCode = 401;
         res.send('401 Unauthorized: ' + reason);
     });
 });
-router.post('/instructions', (req, res, next) => {
-    validateHeader(req.headers).then((validated) => {
-        res.send(JSON.stringify([{todo: 'look into where instructions are to be kept, where does the array go'}]));     //TODO
+router.post('/instructions/push', (req, res, next) => {
+    validateHeader(req.headers).then((validated) =>{
+        console.log(req.body);
+        res.send('Received instruction push req. ' + req.body);
     }).catch((reason) => {
         console.error(reason);
-        res.statusCode = 401;
-        res.send('401 Unauthorized: ' + reason);
+        res.statusCode = 400;
+        res.send('Error: ' + reason);
     });
 });
 
-//sensor data
+//sensor data api routes
 
 router.get('/sensors', (req, res, next) => {
     res.send('Use POST to get sensor data');
 });
 router.post('/sensors', (req, res, next) => {
-    validateHeader(req.headers).then((validated) => {
+    validateHeader(req.headers, DB.PERMISSIONS.READ_SENSOR).then((validated) => {
 
         if(redacted.AQE_API_KEY === undefined) {
             console.error('Undefined api key.  This is most likely unintentional');
@@ -110,13 +117,14 @@ router.get('/', (req, res, next) => {
  * Validate that a http header has correct authorization.  Returns a promise that rejects if not validated,
  * and resolves if correctly authenticated
  * @param {any} headers the http header object provided 
+ * @param {number} permission the permission to check if the header has.  Should be one of db.PERMISSIONS
  */
-function validateHeader(headers) {
+function validateHeader(headers, permission) {
     return new Promise((resolve, reject) => {
         if(!headers.authorization) {
             reject('missing authorization header');
         } else {
-            return db.validateKey(headers.authorization).then((isValidated) => {
+            return db.validateKey(headers.authorization, permission).then((isValidated) => {
                 if(isValidated) {
                     resolve('authenticated');
                 } else {

@@ -9,7 +9,8 @@ const fileExists = require('file-exists');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
  
-
+//Permissions
+const PERMISSIONS = {READ_SENSOR: 1, READ_INSTRUCTION: 2, WRITE_INSTRUCTION: 3};
 
 
 
@@ -141,11 +142,14 @@ class DB {
      * Use this function to insert an api key into the database
      * @param {string} newApiKey the api key to insert
      * @param {string} apikeytable the table that api keys are stored in
+     * @param {{readSensor: boolean, readInstructions: boolean, writeInstructions: boolean}} permissions the permissions to give to api key
      */
-    insertApiKey(newApiKey, apikeytable) {
+    insertApiKey(newApiKey, apikeytable, permissions) {
         return bcrypt.hash(newApiKey, SALT_ROUNDS)
         .then((res) => {
-            return this.insert(apikeytable == null ? 'apikeys' : apikeytable, `(\'${res}\')`);
+            let insertStr = `(\'${res}\', ${permissions.readSensor ? '1' : '0'}, ${permissions.readInstructions ? '1' : '0'}, ${permissions.writeInstructions ? '1' : '0'})`;
+            console.log(insertStr);
+            return this.insert(apikeytable == null ? 'apikeys' : apikeytable, insertStr);
         })
         .catch((err) => {
             console.error('Failed to insert api key. Error: ' + err);
@@ -154,20 +158,44 @@ class DB {
 
     /**
      * Validate an api key
-     * @param {string} apiKey
+     * @param {string} apiKey the api key to validate
+     * @param {number} permission the permission to check for. Should use PERMISSIONS constant for values
      * @returns {Promise<boolean>} a promise that resolves true if the key is validated. 
      */
-    validateKey(apiKey) {
+    validateKey(apiKey, permission) {
         return new Promise((resolve, reject) => {
-            this.select('key', 'apikeys').then((rows) => {
+            this.select('*', 'apikeys').then((rows) => {
                 console.log(rows);
                 for(let i = 0; i < rows.length; i++) {
-                    console.log(rows[i]);
                     if(bcrypt.compareSync(apiKey, rows[i].key)) {       //syncronously compare the hashes, there shouldnt be too many so it should be fine
-                        resolve(true);
+                        console.log(`Matched ${apiKey} with ${rows[i].key}`);
+                        switch(permission) {        //Evaluate if the permission is actually posessed
+                            case PERMISSIONS.READ_INSTRUCTION:
+                                if(rows[i].READ_INSTRUCTION) {
+                                    console.log('Has permission READ_INSTRUCTION');
+                                    resolve(true);
+                                }
+                                break;
+                            case PERMISSIONS.READ_SENSOR:
+                                if(rows[i].READ_SENSOR) {
+                                    console.log('Has permission READ_SENSOR');
+                                    resolve(true);
+                                }
+                                break;
+                            case PERMISSIONS.WRITE_INSTRUCTION:
+                                if(rows[i].WRITE_INSTRUCTION) {
+                                    console.log('Has permission WRITE_INSTRUCTION');
+                                    resolve(true);
+                                }
+                                break;
+                            default:
+                                console.log(`Unexpected permission with code: ${permission}`);
+                                break;
+                        }
                         return;
                     }
                 }
+                console.error('illegal permission');
                 reject(false);
                 
             });
@@ -229,4 +257,5 @@ class DB {
 }
 
 module.exports = DB;
-module.exports.PRODUCTION;
+module.exports.PRODUCTION = PRODUCTION;
+module.exports.PERMISSIONS = PERMISSIONS;
