@@ -164,11 +164,8 @@ class DB {
                 for(let i = 0; i < rows.length; i++) {
                     console.log(rows[i]);
                     if(bcrypt.compareSync(apiKey, rows[i].key)) {       //syncronously compare the hashes, there shouldnt be too many so it should be fine
-                        console.log('correctly compared');
                         resolve(true);
                         return;
-                    } else {
-                        console.log('resolved false');
                     }
                 }
                 reject(false);

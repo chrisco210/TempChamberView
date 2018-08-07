@@ -7,8 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="application-name" content="TempChamberControl">
         <title>TempChamber Control Panel</title>
-        <link rel="stylesheet" href="stylesheets/materialize.css">
-        <link rel="stylesheet" href="stylesheets/style.css">
+        <link rel="stylesheet" href="css/materialize.css">
+        <link rel="stylesheet" href="css/style.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     </head>
@@ -19,7 +19,7 @@
         <script type="text/javascript" src="javascripts/sensordata.js"></script>
         
         
-        <nav class="blue ">
+        <nav class="blue z-depth-0 ">
             <div class="nav-wrapper container">
                 <a href="#" class="brand-logo">Wicked Device</a>
                 <ul id="" class="right">
@@ -29,11 +29,17 @@
             </div>
         </nav>
 
+        <div>
+            <h1 class="center-align">Current Data</h1>
+        </div>
+
         <div class="container">
             <div class="row" id="sensor-display">
                 <div class="col s12">
-                    <ul class="tabs" id="sensor-tabs">
+                    <ul class="tabs " id="sensor-tabs">
                     </ul>
+                </div>
+                <div id="tab-container">
                 </div>
             </div>            
         </div>
