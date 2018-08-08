@@ -1,0 +1,5 @@
+<div id="<%=operation.name%>" class="argument-chooser">
+<%operation.options.forEach((optObj) => {%>
+    <input name="<%=optObj.name%>" type="<%=optObj.type%>" placeholder="<%=optObj.name%> (<%=optObj.type%>)" id="<%=optObj.name%>">
+<%});%>
+</div>

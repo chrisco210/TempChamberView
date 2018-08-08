@@ -1,5 +1,8 @@
 
-const OPERATIONS = {SET_TEMP: {options: ['turns'], name: 'settemp'}, BLINK_LED: {options: [], name: 'blink'}};
+const OPERATIONS = {
+    SET_TEMP: {options: [{name: 'turns', type: 'number'}, {name: 'test', type: 'text'}], name: 'settemp'}, 
+    BLINK_LED: {options: [], name: 'blink'}
+};
 
 /**
  * Instruction manager
@@ -15,7 +18,7 @@ class Manager {
 
     /**
      * Push an instruction onto the instruction stack
-     * @param {Instruction} instruction 
+     * @param {Instruction} instruction the instruction to push onto the stack
      */
     pushInstruction(instruction) {
         this.instructionStack.push(instruction);

@@ -24,34 +24,26 @@ router.post('/', function(req, res, next) {
     });
 });
 
-//Recent instructions page routes
-router.get('/instructions', (req, res, next) => {
-    res.send(JSON.stringify(manager.getInstructionStack()));
-});
+//Get recent instructions
 router.post('/instructions/recent', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.READ_INSTRUCTION).then((validated) => {
-        
+        res.send(JSON.stringify(manager.getInstructionStack()));
     }).catch((reason) => {
         console.error(reason);
         res.statusCode = 401;
         res.send('401 Unauthorized: ' + reason);
     });
 });
+
+//Push an instruction onto the stack
 router.post('/instructions/push', (req, res, next) => {
-    validateHeader(req.headers, DB.PERMISSIONS.WRITE_INSTRUCTION).then((validated) => {
-        if(req.session.auth) {
-            console.log(req.body);  
-            res.send('Received instruction push req. ' + req.body);
-        } else {
-            res.statusCode = 401;
-            res.send('You must be signed in to push instructions.');
-        }
-        
-    }).catch((reason) => {
-        console.error(reason);
-        res.statusCode = 400;
-        res.send('Error: ' + reason);
-    });
+    if(req.session.auth) {
+        console.log(req.body);  
+        res.send('Received instruction push req. did nothing: ' + JSON.stringify(req.body));
+    } else {
+        res.statusCode = 401;
+        res.send('You must be signed in to push instructions.');
+    }
 });
 
 //sensor data api routes
@@ -59,11 +51,12 @@ router.post('/instructions/push', (req, res, next) => {
 router.get('/sensors', (req, res, next) => {
     res.send('Use POST to get sensor data');
 });
+
 router.post('/sensors', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.READ_SENSOR).then((validated) => {
 
         if(redacted.AQE_API_KEY === undefined) {
-            console.error('Undefined api key.  This is most likely unintentional');
+            console.error('WARN: Undefined api key.  This is most likely unintentional');
         }
 
         console.log(EGG_SERIAL);
@@ -78,11 +71,11 @@ router.post('/sensors', (req, res, next) => {
         };
 
         request(options, (err, resp, body) => {
-            if(err) {
-                res.statusCode = 400;
-                res.send(resp + body);
+            if(err || resp.statusCode != 200) {
+                let sendObj = {data: [], time: moment().format(), error: resp.statusMessage};
+                res.send(sendObj);
             } else {
-                let parsedBody = JSON.parse(body);
+                let parsedBody = JSON.parse(body);  
 
                 let sendObj = {data: [], 
                     time: moment().format(),

@@ -16,10 +16,10 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="javascripts/ejs.js"></script>
         <script type="text/javascript" src="javascripts/materialize.js"></script>
-        <script type="text/javascript" src="javascripts/sensordata.js"></script>
+        <script type="text/javascript" src="javascripts/webindex.js"></script>
         
         
-        <nav class="blue z-depth-0 ">
+        <nav class="blue z-depth-0">
             <div class="nav-wrapper container">
                 <a href="#" class="brand-logo">Wicked Device 
                     <%if(session.auth) {%>
@@ -29,11 +29,46 @@
                     <%}%>
                 </a>
                 <ul id="" class="right">
-                    <li><a class="white-text" href="/login/logout">Logout</a></li>
                     <li><a class="white-text" href="/api">API</a></li>
+                    <li><a class="white-text" href="/login/logout">Logout</a></li>
                 </ul>
             </div>
         </nav>
+        <div class="container">
+            <div class="row" id="instr-display">
+                <div class="col s12 m6 l6">
+                    <h3 class="center-align">Queue Instructions</h3>
+                    <form action="/api/instructions/push" method="POST">
+                        <div class="input-field col s12">
+                            <select name="operation " type="text">
+                                <% for(let x in ops) { %>
+                                <%- include('formselect', {op: ops[x]})  %>
+                                <%}%>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <% for(let x in ops) {%>
+                                    <% if(ops[x].options.length !== 0) {%>
+                                        <%- include('arginput', {operation: ops[x]})%>
+                                    <%}%>
+                                <%}%>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="input-field col s4 push-s8">
+                                <input class="btn" type="submit" value="Add"> 
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="recent-instructions" class="col s12 m6 l6">
+                    <h3 class="center-align">Queued Instructions</h3>
+                    <p id="queue-display"></p>
+                </div>
+            </div>
+        </div>
 
         <div>
             <h1 class="center-align">Current Data</h1>
@@ -55,7 +90,7 @@
             </a>
         </div>
 
-        <footer class="page-footer blue">
+        <footer class="page-footer blue z-depth-0">
             <div class="container">
                 <div class="row">
                     <div class="col l6 s12">
