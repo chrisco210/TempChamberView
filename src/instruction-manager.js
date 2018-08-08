@@ -1,7 +1,7 @@
 
 const OPERATIONS = {
-    SET_TEMP: {options: [{name: 'turns', type: 'number'}, {name: 'test', type: 'text'}], name: 'settemp'}, 
-    BLINK_LED: {options: [], name: 'blink'}
+    SET_TEMP: {options: [{name: 'turns', type: 'number'}], name: 'settemp'}, 
+    BLINK_LED: {options: [], name: 'blink'},
 };
 
 /**
@@ -38,6 +38,14 @@ class Manager {
     getInstructionStack() {
         return this.instructionStack;
     }
+
+    /**
+     * Remove an instruction from the queue
+     * @param {number} instruction the index of the instruction to remove
+     */
+    removeInstruction(instruction) {
+
+    }
 }
 
 /**
@@ -49,12 +57,8 @@ class Instruction {
      * linking argname->argvalue
      */
     constructor(op, options) {
-        this.instruction = op.name;
-        this.args = {};
-
-        op.options.forEach((e) => {
-            this.args[e] = options[e];
-        });
+        this.instruction = op;
+        this.args = options;
     }
 }
 

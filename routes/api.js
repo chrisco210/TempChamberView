@@ -38,12 +38,27 @@ router.post('/instructions/recent', (req, res, next) => {
 //Push an instruction onto the stack
 router.post('/instructions/push', (req, res, next) => {
     if(req.session.auth) {
-        console.log(req.body);  
-        res.send('Received instruction push req. did nothing: ' + JSON.stringify(req.body));
+        let body = Object.assign({}, req.body);
+        let operation = body.operation;
+
+        delete body.operation;      //after deleting we are left with just the args
+
+        manager.pushInstruction(new instructionMan.Instruction(operation, body));
+        
+        res.redirect('/');
     } else {
         res.statusCode = 401;
         res.send('You must be signed in to push instructions.');
     }
+});
+
+router.post('/instructions/grab', (req, res, next) => {
+    validateHeader(req.headers, DB.PERMISSIONS.WRITE_INSTRUCTION).then((validated) => {
+
+    }).catch((reason) => {
+        res.status = 401;
+        res.send('Unauthorized API key. Key does not have permission WRITE_INSTRUCTION');
+    });
 });
 
 //sensor data api routes

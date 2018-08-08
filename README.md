@@ -44,3 +44,24 @@ web to access it from anywhere.
 
 ## First time login
 The default username for login is root, the default password is password.  You can change these in the admin panel (coming soon).
+
+# Temperature Chamber API 
+## Instruction API
+### api/instructions/recent
+Return the current instruction stack as json array
+
+Requires an authorization header with the permission READ_INSTRUCTION
+### api/instructions/push
+Push a new instruction onto the instruction stack.
+
+Requires a valid session. This should only be done from the included web interface
+### api/instructions/grab
+Get all instructions on the instruction stack and remove them from the stack.
+
+Requires an authorization header with the permission WRITE_INSTRUCTION  
+
+## Sensor API
+### api/sensors
+Get the most recent sensor data from the reference egg as json
+
+Requires an authorization header with the permission READ_SENSOR
