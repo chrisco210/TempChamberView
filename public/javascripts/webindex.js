@@ -5,7 +5,7 @@ var operationHTML = {};
 
 var template = '<p><%= JSON.stringify(data) %></p>';
 var TEMPLATE_TAB = '<li class="tab col s3"><a href="#<%=data.name%>" class="blue-text"><%=data.name%></a></li>';
-var TEMPLATE_CARD = '<div class="col s12 " id="<%=data.name%>"><h3><%=data.name%></h3><p><%= data.value + \' \' + data.units%></p></div>';
+var TEMPLATE_CARD = '<div class="col s12 " id="<%=data.name%>"><h3 class="center-align"><%=data.name%></h3><p class="center-align"><%= data.value + \' \' + data.units%></p></div>';
 var TEMPLATE_COLLAPSE = '<li><div class="collapsible-header"><%=op.instruction%></div><div class="collapsible-body"><span><%=JSON.stringify(op.args)%></span></div></li>';
 
 var sensorTypes = ['temperature', 'humidity',];

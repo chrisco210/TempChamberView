@@ -1,18 +1,11 @@
 <html lang="en">
     <head>
+        <%-include('head', {title: 'TempChamberControl'})%>
         <meta charset="UTF-8">
         <meta name="description" content="Control panel for the WickedDevice temperature calibration chamber">
         <meta name="keywords" content="Control, Temperature, Humidity, Air Quality, Egg, Wicked Device">
-        <meta name="author" content="Chris Rachlinski">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="application-name" content="TempChamberControl">
-        <title>TempChamber Control Panel</title>
-        <link rel="stylesheet" href="css/materialize.css">
-        <link rel="stylesheet" href="css/style.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     </head>
-    <body>
+    <body class="grey lighten-4">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="javascripts/ejs.js"></script>
         <script type="text/javascript" src="javascripts/materialize.js"></script>
@@ -30,67 +23,74 @@
                 </a>
                 <ul id="" class="right">
                     <li><a class="white-text" href="/api">API</a></li>
+                    <li><a class="white-text" href="/settings">Settings</a></li>
                     <li><a class="white-text" href="/login/logout">Logout</a></li>
                 </ul>
             </div>
         </nav>
-        <div class="container">
-            <div class="row" id="instr-display">
-                <div class="col s12 m6 l6">
-                    <h3 class="center-align">Queue Instructions</h3>
-                    <form action="/api/instructions/push" method="POST">
-                        <div class="input-field col s12">
-                            <select id="operation-selector" onchange="handleChange()" name="operation" type="text">
-                                <% for(let x in ops) { %>
-                                <%- include('formselect', {op: ops[x]})  %>
-                                <%}%>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12" id="args-input">
-                                <% for(let x in ops) {%>
-                                    <% if(ops[x].options.length !== 0) {%>
-                                        <%- include('arginput', {operation: ops[x]})%>
+        <section class="white">
+            <div class="container">
+                <div class="row" id="instr-display">
+                    <div class="col s12 m6 l6">
+                        <h3 class="center-align">Queue Instructions</h3>
+                        <form action="/api/instructions/push" method="POST">
+                            <div class="input-field col s12">
+                                <select id="operation-selector" onchange="handleChange()" name="operation" type="text">
+                                    <% for(let x in ops) { %>
+                                    <%- include('formselect', {op: ops[x]})  %>
                                     <%}%>
-                                <%}%>
+                                </select>
                             </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="input-field col s4 push-s8">
-                                <input class="btn" type="submit" value="Push"> 
+                            <div class="row">
+                                <div class="input-field col s12" id="args-input">
+                                    <% for(let x in ops) {%>
+                                        <% if(ops[x].options.length !== 0) {%>
+                                            <%- include('arginput', {operation: ops[x]})%>
+                                        <%}%>
+                                    <%}%>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-                <div id="recent-instructions" class="col s12 m6 l6">
-                    <h3 class="center-align">Queued Instructions</h3>
-                    <ul id="instruction-display" class="collapsible z-index-1">
-                        
-                    </ul>
+                            
+                            <div class="row">
+                                <div class="input-field col s4 push-s8">
+                                    <input class="btn" type="submit" value="Push"> 
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="recent-instructions" class="col s12 m6 l6">
+                        <h3 class="center-align">Queued Instructions</h3>
+                        <ul id="instruction-display" class="collapsible z-index-1">
+                            
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <div>
             <h1 class="center-align">Current Data</h1>
         </div>
 
-        <div class="container">
-            <div class="row" id="sensor-display">
-                <div class="col s12">
-                    <ul class="tabs " id="sensor-tabs">
-                    </ul>
-                </div>
-                <div id="tab-container">
-                </div>
-            </div>            
-        </div>
+        <section class="">
+            <div class="container">
+                <div class="row" id="sensor-display">
+                    <div class="col s12">
+                        <ul class="tabs grey lighten-4" id="sensor-tabs">
+                        </ul>
+                    </div>
+                    <div id="tab-container">
+                    </div>
+                </div>            
+            </div>
+        </section>
+
         <div class="fixed-action-btn">
-            <a class="btn-floating btn-large blue accent-2" onclick="updateSensorData()">
-                <i class="material-icons">refresh</i>
-            </a>
-        </div>
+                <a class="btn-floating btn-large blue accent-2" onclick="updateSensorData()">
+                    <i class="material-icons">refresh</i>
+                </a>
+            </div>
+        
 
         <footer class="page-footer blue z-depth-0">
             <div class="container">

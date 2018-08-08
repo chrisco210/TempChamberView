@@ -111,26 +111,8 @@ class DB {
                 insertStr += '(';
                 //generate an insert string based on the values passed
                 for(let i = 0; i < values.length; i++) {
-                    switch(values[i].type) {
-                        case SQLITE_DATATYPES.BLOB:  
-                            insertStr += values[i].value;
-                            break;
-                        case SQLITE_DATATYPES.INTEGER:
-                            insertStr += '' + values[i].value;
-                            break;
-                        case SQLITE_DATATYPES.REAL:
-                            insertStr += '' + values[i].value;
-                            break;
-                        case SQLITE_DATATYPES.TEXT:
-                            insertStr += '\'' + values[i].value + '\'';
-                            break;
-                        case SQLITE_DATATYPES.BOOL:
-                            insertStr += values[i].value ? '1' : '0';
-                            break;
-                        default:
-                            console.error('illegal datatype in insert statement');
-                            break;
-                    }
+                    insertStr += _strc(values[i].value, values[i].type);
+                    
                     if(i !== values.length - 1) {
                         insertStr += ',';
                     }
@@ -153,9 +135,9 @@ class DB {
      * Format: SELECT resultColumn FROM table WHERE where 
      * Format (null where): SELECT resul3tColumn FROM table
      * 
-     * @param {string} resultColumn the  
-     * @param {string} table 
-     * @param {string} where 
+     * @param {string} resultColumn the column to select from
+     * @param {string} table the table to select from
+     * @param {string} where an sqlite boolean expression
      * @returns {Promise<array>} of the this object of the operation
      */
     select(resultColumn, table, where) {
@@ -183,10 +165,35 @@ class DB {
     }
 
     /**
+     * Update a table in the form UPDATE table SET columnName1 = newValue1, columnName2 = newValue2 ... WHERE where
+     * @param {string} table the name of the table to update
+     * @param {{columnName: string, newValue: any}[]} setterObject an array of objects containing a column name to update
+     * followd by the value to update them to as an sqlite expression
+     * @param {string} where an sqlite boolean expression
+     */
+    update(table, setterObject, where) {
+        this.db.serialize(() => {
+            let setStr = '';
+                for(let i = 0; i < setterObject.length; i++) {
+                    setStr += setterObject[i].columnName + ' = ' + setterObject[i].newValue;
+                    if(i !== setterObject.length - 1) {
+                        setStr += ',';
+                    }
+                }
+            if(where) {
+                this.db.run(`UPDATE ${table} SET ${setStr} WHERE ${where}`);
+            } else {
+                this.db.run(`UPDATE ${table} SET ${setStr}`);
+            }
+        });
+    }
+
+    /**
      * Use this function to insert an api key into the database
      * @param {string} newApiKey the api key to insert
      * @param {string} apikeytable the table that api keys are stored in
-     * @param {{readSensor: boolean, readInstructions: boolean, writeInstructions: boolean}} permissions the permissions to give to api key
+     * @param {{readSensor: boolean, readInstructions: boolean, writeInstructions: boolean}} permissions the permissions 
+     * to give to api key
      */
     insertApiKey(newApiKey, apikeytable, permissions) {
         return bcrypt.hash(newApiKey, SALT_ROUNDS)
@@ -215,11 +222,12 @@ class DB {
     validateKey(apiKey, permission) {
         return new Promise((resolve, reject) => {
             this.select('*', 'apikeys').then((rows) => {
-                console.log(rows);
+                    console.log(rows);
                 for(let i = 0; i < rows.length; i++) {
                     if(bcrypt.compareSync(apiKey, rows[i].key)) {       //syncronously compare the hashes, there shouldnt be too many so it should be fine
                         console.log(`Matched ${apiKey} with ${rows[i].key}`);
                         switch(permission) {        //Evaluate if the permission is actually posessed
+                            //TODO
                             case PERMISSIONS.READ_INSTRUCTION:
                                 if(rows[i].READ_INSTRUCTION) {
                                     console.log('Has permission READ_INSTRUCTION');
@@ -248,6 +256,10 @@ class DB {
                 console.error('illegal permission');
                 reject(false);
                 
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(false); 
             });
                 
         });
@@ -261,7 +273,20 @@ class DB {
      * @param {string} tableName the name of the table
      */
     generateUser(username, password, isAdmin, tableName) {
+        //First check if username is taken
+        
+
         return new Promise((resolve, reject) => {
+            this.select('username', 'users', _eq('username', username)).then((rows) => {
+                if(rows.length > 0) {
+                    reject('Username taken');
+                }
+            }).catch((err) => {
+                console.error(err);
+                rejct(err);
+                return;
+            });
+
             bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
                 this.insert(tableName, 
                 [
@@ -285,6 +310,28 @@ class DB {
     }
 
     /**
+     * Update a users password to a new password
+     * @param {string} username the username of the user to update
+     * @param {string} newPassword the password to update to
+     */
+    updatePassword(username, newPassword) {
+        bcrypt.hash(newPassword, SALT_ROUNDS).then((hash) => {
+            this.update(
+                'users', 
+                {columnName: 'password', newValue: _strc(hash)},
+                _eq('username', username)
+            );
+        }).catch((err) => {
+            console.error(err);
+        });
+    }
+
+
+    updateUsername(oldUsername, newUsername) {
+
+    }
+
+    /**
      * Verify that a password matches the one stored in the database
      * @param {string} username the supplied username
      * @param {string} suppliedPassword the supplied password
@@ -292,7 +339,7 @@ class DB {
      */
     validatePassword(username, suppliedPassword) {
         return new Promise((resolve, reject) => {
-            this.select('password', 'users', `username=\'${username}\'`).then((rows) => {
+            this.select('password', 'users', _eq('username', username)).then((rows) => {
                 bcrypt.compare(suppliedPassword, rows[0].password).then((isCorrect) => {
                     if(isCorrect) {
                         resolve(true);
@@ -309,9 +356,46 @@ class DB {
             });
         });
     }
+
+    
+}
+
+/**
+ * Convert the given data into a string usable in sqlite strings.
+ * @param {string} str the string to convert
+ * @param {string} type one of SQLITE_DATATYPES.  If none specified, it assumes SQLITE_DATATYPES.TEXT
+*/
+function _strc(str, type) {
+    switch(type) {
+        case SQLITE_DATATYPES.TEXT:
+            return `'${str}'`;
+        case SQLITE_DATATYPES.INTEGER:
+            return '' + str;
+        case SQLITE_DATATYPES.REAL:
+            return '' + str;
+        case SQLITE_DATATYPES.BLOB:
+            return '' + str;
+        case SQLITE_DATATYPES.BOOL:
+            return str ? '1' : '0';
+        default:
+            return `'${str}'`;
+    }
+}
+
+/**
+ * Generate an equality boolean expression usable in. 
+ * Format: columnName = to
+ * @param {string} columnName the name of the column to compare to
+ * @param {any} to the thing to compare to
+ * @param {string} type one of SQLITE_DATATYPES.  If none specified assumes SQLITE_DATATYPES.TEXT
+ */
+function _eq(columnName, to, type) {
+    return `${columnName} = ${_strc(to, type)}`;
 }
 
 module.exports = DB;
 module.exports.PRODUCTION = PRODUCTION;
 module.exports.PERMISSIONS = PERMISSIONS;
 module.exports.SQLITE_DATATYPES = SQLITE_DATATYPES;
+module.exports._strc = _strc;
+module.exports._eq = _eq;

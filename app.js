@@ -13,6 +13,7 @@ var upload = multer();
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
 var loginRouter = require('./routes/login');
+var settingsRouter = require('./routes/settings');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use(bodyParser());
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 app.use('/login', loginRouter);
+app.use('/settings', settingsRouter);
 
 
 // catch 404 and forward to error handler

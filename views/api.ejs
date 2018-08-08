@@ -1,34 +1,36 @@
 <html>
     <head>
-        <title>Temperature Chamber API</title>
+        <%- include('head', {title: 'API Reference'})%>
     </head>
     <body>
-        <h1>Temperature Chamber Controller API Reference</h1>
-        <h2>Accessing</h2>
-        <p>Use a POST request on the pages with an authorization header like such:</p>
-        <p>authorization:yourkeyhere</p>
-        <h2>Routes:</h2>
-        <ul>
-            <li>
-                <h3>api/instructions/recent</h3>
-                <p>Return the current instruction stack as json array</p>
-                <p>Requires an authorization header with the permission READ_INSTRUCTION</p>
-            </li>
-            <li>
-                <h3>api/instructions/push</h3>
-                <p>Push a new instruction onto the instruction stack.</p>
-                <p>Requires a valid session.  This should only be done from the included web interface</p>
-            </li>
-            <li>
-                <h3>api/instructions/grab</h3>
-                <p>Get all instructions on the instruction stack and remove them from the stack.</p>
-                <p>Requires an authorization header with the permission WRITE_INSTRUCTION</p>
-            </li>
-            <li>
-                <h3>api/sensors</h3>
-                <p>Get the most recent sensor data from the reference egg as json</p>
-                <p>Requires an authorization header with the permission READ_SENSOR</p>
-            </li>
-        </ul>
+        <div class="container">
+            <h1>Temperature Chamber Controller API Reference</h1>
+            <h2>Accessing</h2>
+            <p>Use a POST request on the pages with an authorization header like such:</p>
+            <p>authorization:yourkeyhere</p>
+            <h2>Routes:</h2>
+            <ul>
+                <li>
+                    <h3>api/instructions/recent</h3>
+                    <p>Return the current instruction stack as json array</p>
+                    <p>Requires an authorization header with the permission READ_INSTRUCTION</p>
+                </li>
+                <li>
+                    <h3>api/instructions/push</h3>
+                    <p>Push a new instruction onto the instruction stack.</p>
+                    <p>Requires a valid session.  This should only be done from the included web interface</p>
+                </li>
+                <li>
+                    <h3>api/instructions/grab</h3>
+                    <p>Get all instructions on the instruction stack and remove them from the stack.</p>
+                    <p>Requires an authorization header with the permission WRITE_INSTRUCTION</p>
+                </li>
+                <li>
+                    <h3>api/sensors</h3>
+                    <p>Get the most recent sensor data from the reference egg as json</p>
+                    <p>Requires an authorization header with the permission READ_SENSOR</p>
+                </li>
+            </ul>
+        </div>
     </body>
 </html>

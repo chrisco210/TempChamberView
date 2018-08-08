@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <% include('head', {title: 'Settings'})%>
+    </head>
+    <body>
+        <h1>Settings - <%=auth.username%></h1>
+        <form action="" method="POST">
+            <h2>Create new user</h2>
+            <p>Username</p>
+            <input type="text" name="newusername">
+            <p>Password - Confirm Password</p>
+            <input type="password" name="newpassword">
+            <input type="password" name="confirm">
+            <input type="submit" value="Create">
+        </form>
+        <form action="" method="POST">
+            <h2>Change password</h2>
+            <p>Username</p>
+            <input type="text" name="username">
+            <p>Password - Confirm Password</p>
+            <input type="password" name="newpassword">
+            <input type="password" name="confirm">
+            <input type="submit" value="Update">
+        </form>
+        <form action="" method="POST">
+            <h2>Delete Account</h2>
+            <p>Username</p>
+            <input type="text" name="todelete">
+            <p>Confirm</p>
+            <input type="checkbox" name="confirm">
+            <input type="submit" value="Delete">
+        </form>
+        <form action="/settings/keys/create" method="POST">
+            <h2>Generate API key</h2>
+            <p>READ_SENSOR</p>
+            <input type="checkbox" name="READ_SENSOR">
+            <p>READ_INSTRUCTION</p>
+            <input type="checkbox" name="READ_INSTRUCTION">
+            <p>WRITE_INSTRUCTION</p>
+            <input type="checkbox" name="WRITE_INSTRUCTION">
+            <br>
+            <input type="submit" value="Generate">
+        </form>
+        <form action="" method="POST">
+            <h2>Remove API Key</h2>
+            <p>Key</p>
+            <input type="text" name="key">
+            <p>Confirm</p>
+            <input type="checkbox" name="confirm">
+            <input type="submit" value="Delete">
+        </form>
+    </body>
+</html>
