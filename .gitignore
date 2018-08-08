@@ -2,3 +2,5 @@
 ./redacted.js
 redacted.js
 node_modules/
+public/css/materialize.css
+public/css/materialize.css.map

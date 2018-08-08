@@ -7,8 +7,13 @@ app that runs on the raspi that controls the temperature of the chamber that pol
 
 # Installation
 ## Downlading
-Clone the repository into the desired location.  After downloading, it is reccomended you redownload all dependencies by removing the node_modules folder (`rm -rf ./node_modules`),
-and then reinstalling them by running `npm install`.
+Clone the repository into the desired location.  
+
+## Installing dependenceies
+Before running, you must download dependencies by running `npm install`.  
+
+After installing all node dependencies, you must compile materialize.scss to create the stylesheets.  To do this, you
+can use the compile-css npm script by running `npm run compile-css`.
 
 ## Generating the database
 To create the database, run `node create-database.js`, which creates the sqlite database file, and initializes it with default tables and default logins (which you should change).  Make sure to change the production variable in src/db.js to true BEFORE running this command, or the testing database will be created.  If you wish you can test the database by running `node test-database.js` and making sure you get an expected output.
@@ -18,6 +23,9 @@ To switch to production mode, update src/db.js as such:
 // src/db.js
 const PRODUCTION = true;
 ```
+
+After generating the database, a root login will be created with username root and password password.  You can change these
+on the settings panel of the web interface.
 
 ## Configuration
 To set your desired port to host on, edit SERVER_PORT in bin/www as such:
