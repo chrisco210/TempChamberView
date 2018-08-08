@@ -18,9 +18,10 @@ const PERMISSIONS = {
 
 const SQLITE_DATATYPES = {
     TEXT: 'TEXT',
-    INTEGER: 'NUMBER',
+    INTEGER: 'INTEGER',
     REAL: 'REAL',
-    BLOB: 'BLOB'
+    BLOB: 'BLOB',
+    BOOL: 'INTEGER'
 };
 
 
@@ -97,49 +98,45 @@ class DB {
      * Format: INSERT INTO tableName VALUES values
      * Do not use this for api keys - use insertApiKey
      * @param {string} tableName the name of the table to insert into
-     * @param {string | {value: any, type: string}[]} values the values to insert. can either be a standard sqlite
+     * @param {value: any, type: string}[]} values the values to insert. can either be a standard sqlite
      * insert string, or an array of the objects shown below, where the type should be one of db.SQLITE_DATATYPES.  
      * Note that passing a string is deprecated, and you should use the array
-     * @param {boolean} useValuesArray if true, values can be an array instead of string
      * @returns {Promise} the this object of the operation
      */
-    insert(tableName, values, useValuesArray) {
+    insert(tableName, values) {
         return new Promise((resolve, reject) => {
             this.db.serialize(() => {
                 let insertStr = '';
 
-                //make sure they passed an array when choosing to use a values array
-                if(useValuesArray && values instanceof array) {
-                    insertStr += '(';
-                    //generate an insert string based on the values passed
-                    for(let i = 0; i < values.length; i++) {
-                        switch(values[i].type) {
-                            case SQLITE_DATATYPES.BLOB:  
-                                insertStr += values[i].value;
-                                break;
-                            case SQLITE_DATATYPES.INTEGER:
-                                insertStr += '' + values[i].value;
-                                break;
-                            case SQLITE_DATATYPES.REAL:
-                                insertStr += '' + values[i].value;
-                                break;
-                            case SQLITE_DATATYPES.TEXT:
-                                insertStr += '\'' + values[i].value + '\'';
-                                break;
-                            default:
-                                console.error('illegal datatype in insert statement');
-                                break;
-                        }
-                        if(i !== values.length - 1) {
-                            insertStr += ',';
-                        }
+                insertStr += '(';
+                //generate an insert string based on the values passed
+                for(let i = 0; i < values.length; i++) {
+                    switch(values[i].type) {
+                        case SQLITE_DATATYPES.BLOB:  
+                            insertStr += values[i].value;
+                            break;
+                        case SQLITE_DATATYPES.INTEGER:
+                            insertStr += '' + values[i].value;
+                            break;
+                        case SQLITE_DATATYPES.REAL:
+                            insertStr += '' + values[i].value;
+                            break;
+                        case SQLITE_DATATYPES.TEXT:
+                            insertStr += '\'' + values[i].value + '\'';
+                            break;
+                        case SQLITE_DATATYPES.BOOL:
+                            insertStr += values[i].value ? '1' : '0';
+                            break;
+                        default:
+                            console.error('illegal datatype in insert statement');
+                            break;
                     }
-                    insertStr += ')';
-                } else {
-                    console.error('WARN: Passing strings to db.insert is deprecated');
-                    insertStr = values;
+                    if(i !== values.length - 1) {
+                        insertStr += ',';
+                    }
                 }
-
+                insertStr += ')';
+                
                 this.db.run(`INSERT INTO ${tableName} VALUES ${insertStr}`, [], (err) => {
                     if(err) {
                         reject('Error inserting into table. op: ' + `INSERT INTO ${tableName} VALUES ${values}. err: ` + err);
@@ -194,9 +191,15 @@ class DB {
     insertApiKey(newApiKey, apikeytable, permissions) {
         return bcrypt.hash(newApiKey, SALT_ROUNDS)
         .then((res) => {
-            let insertStr = `(\'${res}\', ${permissions.readSensor ? '1' : '0'}, ${permissions.readInstructions ? '1' : '0'}, ${permissions.writeInstructions ? '1' : '0'})`;
-            console.log(insertStr);
-            return this.insert(apikeytable == null ? 'apikeys' : apikeytable, insertStr);
+            return this.insert(
+                apikeytable === null ? 'apikeys' : apikeytable, 
+                [
+                    {value: res, type: SQLITE_DATATYPES.TEXT}, 
+                    {value: permissions.readSensor, type: SQLITE_DATATYPES.BOOL}, 
+                    {value: permissions.readInstructions, type: SQLITE_DATATYPES.BOOL}, 
+                    {value: permissions.writeInstructions, type: SQLITE_DATATYPES.BOOL}
+                ]
+            );
         })
         .catch((err) => {
             console.error('Failed to insert api key. Error: ' + err);
@@ -260,7 +263,12 @@ class DB {
     generateUser(username, password, isAdmin, tableName) {
         return new Promise((resolve, reject) => {
             bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
-                this.insert(tableName, `(\'${username}\', \'${hash}\', ${isAdmin ? 1 : 0})`).then((res) => {
+                this.insert(tableName, 
+                [
+                    {value: username, type: SQLITE_DATATYPES.TEXT},
+                    {value: hash, type: SQLITE_DATATYPES.TEXT},
+                    {value: isAdmin, type: BOOL}
+                ]).then((res) => {
                     resolve(res);
                 })
                 .catch((err) => {

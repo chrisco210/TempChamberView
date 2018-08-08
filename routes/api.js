@@ -40,7 +40,7 @@ router.post('/instructions/recent', (req, res, next) => {
 router.post('/instructions/push', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.WRITE_INSTRUCTION).then((validated) => {
         if(req.session.auth) {
-            console.log(req.body);
+            console.log(req.body);  
             res.send('Received instruction push req. ' + req.body);
         } else {
             res.statusCode = 401;
