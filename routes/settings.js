@@ -20,9 +20,6 @@ router.get('/', function(req, res, next) {
 //Create a key
 router.post('/keys/create', (req, res, next) => {
   if(req.session.auth) {
-
-    
-
     console.log(req.body);
     let sha = crypto.createHash('sha1').update('' + Math.random());
     let key = sha.digest('hex');

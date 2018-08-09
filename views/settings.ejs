@@ -12,15 +12,15 @@
                         <div class="row">
                             <h4>Create new user</h4>
                             <div class="input-field col s12">
-                                <input id="newusername" type="text" class="validate" name="newusername" placeholder="Username">
+                                <input id="newusername" type="text" class="validate" name="newusername" placeholder="Username" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12 m6 l6">
-                                <input id="newpassword" type="password" class="validate" name="newpassword" placeholder="Password">
+                                <input id="newpassword" type="password" class="validate" name="newpassword" placeholder="Password" required minlength="5">
                             </div>
                             <div class="input-field col s12 m6 l6">
-                                <input id="confirmpassword" type="password" class="validate" name="confirm" placeholder="Confirm password">
+                                <input id="confirmpassword" type="password" class="validate" name="confirm" placeholder="Confirm password" required minlength="5">
                             </div>
                         </div>
                         <div class="row">
@@ -33,10 +33,10 @@
                         <div class="row">
                             <h4>Change your Password</h4>
                             <div class="input-field col s12 m6 l6">
-                                <input id="newpassword" type="password" class="validate" name="newpassword" placeholder="Password">
+                                <input id="newpassword" type="password" class="validate" name="newpassword" placeholder="Password" required minlength="5">
                             </div>
                             <div class="input-field col s12 m6 l6">
-                                <input id="confirmpassword" type="password" class="validate" name="confirm" placeholder="Confirm password">
+                                <input id="confirmpassword" type="password" class="validate" name="confirm" placeholder="Confirm password" required minlength="5">
                             </div>
                         </div>
                         <div class="row">
@@ -48,7 +48,7 @@
                     <form action="settings/users/delete" method="POST">
                         <h4>Delete your Account</h4>
                         <div class="input-field col s12">
-                            <input id="username" type="text" class="validate" name="username" placeholder="Type your username to confirm">
+                            <input id="username" type="text" class="validate" name="username" placeholder="Type your username to confirm" required>
                         </div>
                         <div class="row">
                             <div class="col s12">
@@ -87,7 +87,7 @@
                     <form action="/settings/keys/delete" method="POST">
                         <h4>Delete API Key</h4>
                         <div class="input-field col s12">
-                            <input id="key" type="text" class="validate" name="key" placeholder="Key">
+                            <input id="key" type="text" class="validate" name="key" placeholder="Key" required>
                         </div>
                         <div class="row">
                             <div class="col s12">

@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var path = require('path');
 var DB = require('../src/db');
 var db = new DB();
+
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) { 
@@ -13,6 +14,9 @@ router.get('/', function(req, res, next) {
 router.post('/', (req, res, next) => {
     let username = req.body.username;
     let pwd = req.body.password;
+
+    //Sanitize password input
+
 
     db.validatePassword(username, pwd).then((success) => {
         req.session.auth = {authenticated: true, 

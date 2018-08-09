@@ -464,8 +464,9 @@ function _strc(str, type) {
  * @param {any} to the thing to compare to
  * @param {string} type one of SQLITE_DATATYPES.  If none specified assumes SQLITE_DATATYPES.TEXT
  */
-function _eq(columnName, to, type) {
-    return `${columnName} = ${_strc(to, type)}`;
+function _eq(columnName, to, type, escape) {
+        return `${columnName} = ${_strc(to, type)}`;
+    
 }
 
 module.exports = DB;

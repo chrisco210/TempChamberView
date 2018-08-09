@@ -6,7 +6,7 @@ const redacted = require('../redacted.js');
 const request = require('request');
 const moment = require('moment');
 const instructionMan = require('../src/instruction-manager');
-
+const sqlstring = require('sqlstring');
 var db = new DB();
 
 var manager = new instructionMan.Manager();
