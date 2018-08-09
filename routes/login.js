@@ -5,8 +5,8 @@ var DB = require('../src/db');
 var db = new DB();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.sendFile(path.resolve('public/login.html'));
+router.get('/', function(req, res, next) { 
+  res.sendFile(res.render('login', {con: res.header.continue}));
 });
 
 //validate provided creds here
@@ -18,18 +18,22 @@ router.post('/', (req, res, next) => {
         req.session.auth = {authenticated: true, 
                             key: 0,
                             username: username,
-                            note: 'This will be relpaced by a more secure auth system',
                         };
-        res.redirect('/');      //if authenticated, send to home page
+
+        if(!req.body.continue) {
+            console.log('Missing continue url');    
+        }
+
+        res.redirect(req.body.continue === undefined ? '/' : req.body.continue); 
     }).catch((err) => {
         res.send('Failed to authenticate: ' + err);
     });
 });
 
-//logout here
+//logout here`
 router.get('/logout', (req, res, next) => {
     delete req.session.auth;
-    res.send('Logged out');
+    res.redirect('/login');
 });
 
 module.exports = router;

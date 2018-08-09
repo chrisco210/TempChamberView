@@ -38,7 +38,6 @@ class DB {
         this.db = new sqlite.Database(`${DB_PATH}/db-${PRODUCTION ? 'production' : 'testing'}.db`);
     }
 
-
     /**
      * Check if the database file exists
      * resolves true if it exists, rejects false if it does not
@@ -189,6 +188,26 @@ class DB {
     }
 
     /**
+     * Delete from a table.  Format: DELETE FROM tableName WHERE where
+     * @param {string} tableName the name of the table to delete from
+     * @param {string} where sqlite boolean expression
+     */
+    delete(tableName, where) {
+        return new Promise((resolve, reject) => {
+            this.db.serialize(() => {
+                this.db.run(`DELETE FROM ${tableName} WHERE ${where}`, (result, err) => {
+                    if(err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+        });
+        
+    }
+
+    /**
      * Use this function to insert an api key into the database
      * @param {string} newApiKey the api key to insert
      * @param {string} apikeytable the table that api keys are stored in
@@ -222,10 +241,13 @@ class DB {
     validateKey(apiKey, permission) {
         return new Promise((resolve, reject) => {
             this.select('*', 'apikeys').then((rows) => {
-                    console.log(rows);
+                console.log(rows);
                 for(let i = 0; i < rows.length; i++) {
-                    if(bcrypt.compareSync(apiKey, rows[i].key)) {       //syncronously compare the hashes, there shouldnt be too many so it should be fine
+                    console.log(`key: ${apiKey} with ${rows[i].key}`);
+                    console.log(bcrypt.compareSync(apiKey, rows[i].key));   
+                    if(bcrypt.compareSync(apiKey, rows[i].key.trim())) {       //syncronously compare the hashes, there shouldnt be too many so it should be fine
                         console.log(`Matched ${apiKey} with ${rows[i].key}`);
+                        
                         switch(permission) {        //Evaluate if the permission is actually posessed
                             //TODO
                             case PERMISSIONS.READ_INSTRUCTION:
@@ -253,7 +275,7 @@ class DB {
                         return;
                     }
                 }
-                console.error('illegal permission');
+                console.error(`Key ${apiKey} does not have permission ${permission}`);
                 reject(false);
                 
             })
@@ -262,6 +284,8 @@ class DB {
                 reject(false); 
             });
                 
+        }).catch((err) => {
+            console.error(err);
         });
     }
 
@@ -292,7 +316,7 @@ class DB {
                 [
                     {value: username, type: SQLITE_DATATYPES.TEXT},
                     {value: hash, type: SQLITE_DATATYPES.TEXT},
-                    {value: isAdmin, type: BOOL}
+                    {value: isAdmin, type: SQLITE_DATATYPES.BOOL}
                 ]).then((res) => {
                     resolve(res);
                 })
@@ -325,7 +349,6 @@ class DB {
             console.error(err);
         });
     }
-
 
     updateUsername(oldUsername, newUsername) {
 

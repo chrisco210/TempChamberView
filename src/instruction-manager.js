@@ -2,6 +2,7 @@
 const OPERATIONS = {
     SET_TEMP: {options: [{name: 'turns', type: 'number'}], name: 'settemp'}, 
     BLINK_LED: {options: [], name: 'blink'},
+    TEST: {options: [{name: 'test1', type: 'text'}, {name: 'test2', type: 'number'}], name: 'test'}
 };
 
 /**

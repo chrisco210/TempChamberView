@@ -18,9 +18,7 @@ router.post('/', function(req, res, next) {
     validateHeader(req.headers).then((validated) => {
         res.send('200: The api key works.  Open in a browser to see documentation.' + validated);
     }).catch((reason) => {
-        console.error(reason);
-        res.statusCode = 401;
-        res.send('401 Unauthorized: ' + reason);
+        res.redirect('/login?continue=' + encodeURIComponent('/api'));
     });
 });
 
@@ -118,6 +116,7 @@ router.post('/sensors', (req, res, next) => {
             }
         });
     }).catch((reason) => {
+        console.error('Sensors: ' + reason);
         res.statusCode = 401;
         res.send('401 Unauthorized: ' + reason);
     });
@@ -125,7 +124,13 @@ router.post('/sensors', (req, res, next) => {
 
 //Documentation page
 router.get('/', (req, res, next) => {
-    res.render('api');
+    //Ensure they are logged in, TODO check if they are admin
+  if(req.session.auth) {
+    res.render('api', {session: req.session});
+  } else {
+    res.header.continue = '/api';
+    res.redirect('/login');
+  }
 });     
 
 /**

@@ -12,22 +12,7 @@
         <script type="text/javascript" src="javascripts/webindex.js"></script>
         
         
-        <nav class="blue z-depth-0">
-            <div class="nav-wrapper container">
-                <a href="#" class="brand-logo">Wicked Device 
-                    <%if(session.auth) {%>
-                        <%= '- ' + session.auth.username%>
-                    <%} else {%>
-                        <%= '- You should not be here. Report this bug.' %> 
-                    <%}%>
-                </a>
-                <ul id="" class="right">
-                    <li><a class="white-text" href="/api">API</a></li>
-                    <li><a class="white-text" href="/settings">Settings</a></li>
-                    <li><a class="white-text" href="/login/logout">Logout</a></li>
-                </ul>
-            </div>
-        </nav>
+        <%- include('navbar', {session: session, links: [{name: 'API', ref: '/api'}, {name: 'Settings', ref: '/settings'}, {name: 'Logout', ref: '/login/logout'}]});%>
         <section class="white">
             <div class="container">
                 <div class="row" id="instr-display">
@@ -86,37 +71,11 @@
         </section>
 
         <div class="fixed-action-btn">
-                <a class="btn-floating btn-large blue accent-2" onclick="updateSensorData()">
-                    <i class="material-icons">refresh</i>
-                </a>
-            </div>
-        
+            <a class="btn-floating btn-large blue accent-2 waves" onclick="updateSensorData()">
+                <i class="material-icons">refresh</i>
+            </a>
+        </div>
 
-        <footer class="page-footer blue z-depth-0">
-            <div class="container">
-                <div class="row">
-                    <div class="col l6 s12">
-                        <h5>Session Information (debug)</h5>
-                        <% if (session) { %>
-                        <p>Cookie:<%=JSON.stringify(session.cookie)%></p>
-                        <p>SessID:<%=session.id%></p>
-                        <p>Session:<%=JSON.stringify(session)%></p>
-                        <% }%>
-                    </div>
-                    <div class="col l4 offset-l2 s12">
-                        <h5>Links</h5>
-                        <ul>
-                            <li><a class="white-text" href="/login">Login</a></li>
-                            <li><a class="white-text" href="/api">API</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-copyright">
-                <div class="container">
-                    © 2018 Wicked Device
-                </div>
-            </div>
-        </footer>
+        <%- include('footer', {session: session}) %>
     </body>
 </html>

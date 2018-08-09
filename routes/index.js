@@ -4,10 +4,11 @@ var operations = require('../src/instruction-manager');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  //Check to make sure logged in, if not, send them to login
+  //Ensure they are logged in, TODO check if they are admin
   if(req.session.auth) {
     res.render('index', {session: req.session, ops: operations.OPERATIONS});
   } else {
+    res.header.continue = '/';
     res.redirect('/login');
   }
   

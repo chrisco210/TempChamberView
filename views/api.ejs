@@ -3,6 +3,7 @@
         <%- include('head', {title: 'API Reference'})%>
     </head>
     <body>
+        <%- include('navbar', {session: session, links: [{name: 'API', ref: '/api'}, {name: 'Settings', ref: '/settings'}, {name: 'Logout', ref: '/login/logout'}]});%>
         <div class="container">
             <h1>Temperature Chamber Controller API Reference</h1>
             <h2>Accessing</h2>
@@ -32,5 +33,7 @@
                 </li>
             </ul>
         </div>
+
+        <%- include('footer', {session: session}) %>
     </body>
 </html>

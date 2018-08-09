@@ -1,53 +1,104 @@
 <html>
     <head>
-        <% include('head', {title: 'Settings'})%>
+        <%- include('head', {title: 'Settings'})%>   
     </head>
     <body>
-        <h1>Settings - <%=auth.username%></h1>
-        <form action="" method="POST">
-            <h2>Create new user</h2>
-            <p>Username</p>
-            <input type="text" name="newusername">
-            <p>Password - Confirm Password</p>
-            <input type="password" name="newpassword">
-            <input type="password" name="confirm">
-            <input type="submit" value="Create">
-        </form>
-        <form action="" method="POST">
-            <h2>Change password</h2>
-            <p>Username</p>
-            <input type="text" name="username">
-            <p>Password - Confirm Password</p>
-            <input type="password" name="newpassword">
-            <input type="password" name="confirm">
-            <input type="submit" value="Update">
-        </form>
-        <form action="" method="POST">
-            <h2>Delete Account</h2>
-            <p>Username</p>
-            <input type="text" name="todelete">
-            <p>Confirm</p>
-            <input type="checkbox" name="confirm">
-            <input type="submit" value="Delete">
-        </form>
-        <form action="/settings/keys/create" method="POST">
-            <h2>Generate API key</h2>
-            <p>READ_SENSOR</p>
-            <input type="checkbox" name="READ_SENSOR">
-            <p>READ_INSTRUCTION</p>
-            <input type="checkbox" name="READ_INSTRUCTION">
-            <p>WRITE_INSTRUCTION</p>
-            <input type="checkbox" name="WRITE_INSTRUCTION">
-            <br>
-            <input type="submit" value="Generate">
-        </form>
-        <form action="" method="POST">
-            <h2>Remove API Key</h2>
-            <p>Key</p>
-            <input type="text" name="key">
-            <p>Confirm</p>
-            <input type="checkbox" name="confirm">
-            <input type="submit" value="Delete">
-        </form>
+        <%- include('navbar', {session: session, links: [{name: 'API', ref: '/api'}, {name: 'Settings', ref: '/settings'}, {name: 'Logout', ref: '/login/logout'}]});%>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <h2>User Settings</h2>
+                    <form action="settings/users/create" method="POST">
+                        <div class="row">
+                            <h4>Create new user</h4>
+                            <div class="input-field col s12">
+                                <input id="newusername" type="text" class="validate" name="newusername" placeholder="Username">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12 m6 l6">
+                                <input id="newpassword" type="password" class="validate" name="newpassword" placeholder="Password">
+                            </div>
+                            <div class="input-field col s12 m6 l6">
+                                <input id="confirmpassword" type="password" class="validate" name="confirm" placeholder="Confirm password">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <input class="btn right" type="submit" value="Create">
+                            </div>
+                        </div>
+                    </form>
+                    <form action="settings/users/update" method="POST">
+                        <div class="row">
+                            <h4>Change your Password</h4>
+                            <div class="input-field col s12 m6 l6">
+                                <input id="newpassword" type="password" class="validate" name="newpassword" placeholder="Password">
+                            </div>
+                            <div class="input-field col s12 m6 l6">
+                                <input id="confirmpassword" type="password" class="validate" name="confirm" placeholder="Confirm password">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <input class="btn right" type="submit" value="Update">
+                            </div>
+                        </div>
+                    </form>
+                    <form action="settings/users/delete" method="POST">
+                        <h4>Delete your Account</h4>
+                        <div class="input-field col s12">
+                            <input id="username" type="text" class="validate" name="username" placeholder="Type your username to confirm">
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <input class="btn red right" value="Delete" type="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col s12 m6 l6">
+                    <h2>Key Settings</h2>
+                    <form action="/settings/keys/create" method="POST">
+                        <h4>Create API Key</h4>
+                        <p>
+                            <label>
+                                <input type="checkbox" name="READ_SENSOR">
+                                <span>Read Sensor</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox" name="READ_INSTRUCTION">
+                                <span>Read Instructions</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input type="checkbox" name="WRITE_INSTRUCTION">
+                                <span>Write Instructions</span>
+                            </label>
+                        </p>
+                        <div class="col s12">
+                            <input class="btn right" type="submit" value="Create">
+                        </div>
+                        
+                    </form>
+                    <form action="/settings/keys/delete" method="POST">
+                        <h4>Delete API Key</h4>
+                        <div class="input-field col s12">
+                            <input id="key" type="text" class="validate" name="key" placeholder="Key">
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <input class="btn red right" value="Delete" type="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer', {session: session}) %>
     </body>
 </html>
