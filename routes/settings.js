@@ -16,55 +16,111 @@ router.get('/', function(req, res, next) {
   }
 });
 
+
 //Create a key
 router.post('/keys/create', (req, res, next) => {
-  console.log(req.body);
-  let sha = crypto.createHash('sha1').update('' + Math.random());
-  let key = sha.digest('hex');
-  db.insertApiKey('' + key, null, 
-    {
-      readSensor: req.body.READ_SENSOR == 'on' ? true : false,
-      readInstructions: req.body.READ_INSTRUCTIONS == 'on' ? true : false,
-      writeInstructions: req.body.WRITE_INSTRUCTIONS == 'on' ? true : false
-    }
-  ).then(() => {
-    res.send('Your key: ' + key);
-  }).catch((err) => {
-    console.error(err);
-  });
+  if(req.session.auth) {
 
-  
+    
+
+    console.log(req.body);
+    let sha = crypto.createHash('sha1').update('' + Math.random());
+    let key = sha.digest('hex');
+    db.insertApiKey('' + key, null, 
+      {
+        readSensor: req.body.READ_SENSOR == 'on' ? true : false,
+        readInstructions: req.body.READ_INSTRUCTIONS == 'on' ? true : false,
+        writeInstructions: req.body.WRITE_INSTRUCTIONS == 'on' ? true : false
+      }
+    ).then(() => {
+      res.send('Your key: ' + key);
+    }).catch((err) => {
+      console.error(err);
+    });
+  } else {
+    res.status = 403;
+    res.send('Creating keys requires auth');
+  }
+});
+
+router.post('/keys/delete', (req, res, next) => {
+  if(req.session.auth) {
+    db.deleteApiKey(req.body.key).then((result) => {
+      console.log(result);  
+      res.send('Deleted');
+    }).catch((err) => {
+      console.error(err);
+      res.status = 500;
+      res.send('Error ' + err);
+    })
+  } else {
+    res.status = 403;
+    res.send('Deleting keys requires auth');
+  }
 });
 
 //Create a user
 router.post('/users/create', (req, res, next) => {
-  if(req.body.newpassword !== req.body.confirm) {
-    res.send('Password and confirm password do not match.');
+  if(req.session.auth) {  
+    if(req.body.newpassword !== req.body.confirm) {
+      res.send('Password and confirm password do not match.');
+    } else {
+      db.generateUser(req.body.newusername, req.body.newpassword, false, 'users').then(() => {
+        res.send('Account created.');
+      }).catch((err) => {
+        res.status = 500;
+        res.send(err);
+        console.error(err);
+      });
+    }
   } else {
-    db.generateUser(req.body.newusername, req.body.newpassword, false, 'users').then(() => {
-      res.send('Account created.');
-    }).catch((err) => {
-      res.status = 500;
-      res.send(err);
-      console.error(err);
-    });
+    res.status = 403;
+    res.send('Creating users requires auth');
   }
+  
 });
 
 //Update a user
 router.post('/users/modify', (req, res, next) => {
-  res.send(req.body);
+  console.log('Attempting to modify user');
+  if(req.session.auth) {
+    if(req.body.newpassword === req.body.confirm) {
+      console.log('Updating');
+      db.updatePassword(req.session.auth.username, req.body.newpassword).then(() => {
+        res.send('Updated password');
+      }).catch((err) => {
+        res.status = 500;
+        res.send('error: ' + JSON.stringify(err));
+      });
+    } else {
+      res.send('Password and confirm password do not match');
+    }
+  } else {
+    res.status = 403;
+    res.send('Modifying users requires auth');
+  }
 });
 
 //Delete a user
 router.post('/users/delete', (req, res, next) => {
-  db.delete('users', DB._eq('username', '' + req.body.username)).then((result) => {
-    res.send('Deleted account. ' + result);
-  }).catch((err) => {
-    console.error(err);
-    res.status = 500;
-    res.send('Err: ' + err);
-  })
+  if(req.session.auth) {
+    if(req.session.auth.username == req.body.username || req.session.auth.username == 'root') {
+      db.delete('users', DB._eq('username', '' + req.body.username)).then((result) => {
+        res.redirect('/login/logout');
+      }).catch((err) => {
+        console.error(err);
+        res.status = 500;
+        res.send('Err: ' + err);
+      });
+    } else {
+      res.status = 403;
+      res.send('You cannot delete other users');
+    }
+  } else {
+    res.status = 403;
+    res.send('Deleting users requires auth');
+  }
+  
 });
 
 module.exports = router;

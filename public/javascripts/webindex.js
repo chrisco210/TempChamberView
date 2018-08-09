@@ -17,7 +17,7 @@ function updateSensorData() {
     var request = new XMLHttpRequest();
 
     request.open('POST', '/api/sensors', true);
-    request.setRequestHeader('authorization', '4d325d58594f2857e154331274b994df0508d99b');
+    request.setRequestHeader('authorization', 'tempkey');
     request.send();
 
 

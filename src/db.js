@@ -171,20 +171,42 @@ class DB {
      * @param {string} where an sqlite boolean expression
      */
     update(table, setterObject, where) {
-        this.db.serialize(() => {
-            let setStr = '';
+        return new Promise((resolve, reject) => {
+            this.db.serialize(() => {
+                let setStr = '';
+
                 for(let i = 0; i < setterObject.length; i++) {
                     setStr += setterObject[i].columnName + ' = ' + setterObject[i].newValue;
                     if(i !== setterObject.length - 1) {
                         setStr += ',';
                     }
                 }
-            if(where) {
-                this.db.run(`UPDATE ${table} SET ${setStr} WHERE ${where}`);
-            } else {
-                this.db.run(`UPDATE ${table} SET ${setStr}`);
-            }
+
+                if(where) {
+                    console.log(`UPDATE ${table} SET ${setStr} WHERE ${where}`);
+                    this.db.all(`UPDATE ${table} SET ${setStr} WHERE ${where}`, (result, err) => {
+                        if(err) {
+                            console.error(err); 
+                            reject(err);
+                        } else {
+                            console.log(result);
+                            resolve(result);
+                        }
+                    });
+                } else {
+                    this.db.all(`UPDATE ${table} SET ${setStr}`, (result, err) => {
+                        if(err) {
+                            console.error(err);
+                            reject(err);
+                        } else {
+                            console.log(result);
+                            resolve(result);
+                        }
+                    });
+                }
+            });
         });
+        
     }
 
     /**
@@ -230,6 +252,30 @@ class DB {
         .catch((err) => {
             console.error('Failed to insert api key. Error: ' + err);
         });
+    }
+
+    /**
+     * Delete an api key from the table
+     * @param {string} toDelete the key to delete
+     * @param {string} table the table to delete from
+     * @param {string} isHashed if true, you provide the hashed key value.
+     */
+    deleteApiKey(toDelete, table, isHashed) {
+        if(isHashed) {
+            return this.delete('apikeys', _eq('key', toDelete));
+        } else {
+            return this.select('*', 'apikeys').then((rows) => {
+                for(let i = 0; i < rows.length; i++) { 
+                    if(bcrypt.compareSync(toDelete, rows[i].key.trim())) {       //syncronously compare the hashes, there shouldnt be too many so it should be fine
+                        return this.delete('apikeys', _eq('key', rows[i].key));
+                    }
+                }
+                reject(false);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        }
     }
 
     /**
@@ -339,19 +385,25 @@ class DB {
      * @param {string} newPassword the password to update to
      */
     updatePassword(username, newPassword) {
-        bcrypt.hash(newPassword, SALT_ROUNDS).then((hash) => {
-            this.update(
-                'users', 
-                {columnName: 'password', newValue: _strc(hash)},
-                _eq('username', username)
-            );
+        return new Promise((resolve, reject) =>{
+            return bcrypt.hash(newPassword, SALT_ROUNDS).then((hash) => {
+                this.update(
+                    'users', 
+                    [{columnName: 'password', newValue: _strc(hash)}],
+                    _eq('username', username)
+                ).then((result) => {
+                    resolve(result);
+                }).catch((err) => {
+                    reject(err);
+                });
+            }).catch((err) => {
+                console.error(err);
+                reject(err);
+            });
         }).catch((err) => {
             console.error(err);
         });
-    }
-
-    updateUsername(oldUsername, newUsername) {
-
+        
     }
 
     /**

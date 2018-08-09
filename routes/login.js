@@ -6,7 +6,7 @@ var db = new DB();
 
 /* GET home page. */
 router.get('/', function(req, res, next) { 
-  res.sendFile(res.render('login', {con: res.header.continue}));
+    res.render('login', {con: res.header.continue});
 });
 
 //validate provided creds here
