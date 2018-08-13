@@ -1,6 +1,7 @@
 var path = require('path');
+
 global.appRoot = path.resolve(__dirname);
-const redacted = require('./redacted');
+
 var createError = require('http-errors');
 var express = require('express');
 var bodyParser = require('body-parser');

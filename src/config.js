@@ -1,11 +1,13 @@
 const path = require('path');
 
-module.exports = () => {
-    const fs = require('fs');
+//Load configuration
+const fs = require('fs');
+let config = JSON.parse(fs.readFileSync(path.join(process.cwd(), './config.json')));  
 
-    let rawdata = fs.readFileSync(path.join(process.cwd(), './config.json'));  
+//Check for extern secret (for use with public git repos)
+if(config.secret.extern) {
+    let redactedItems = JSON.parse(fs.readFileSync(config.secret.extern));
+    config.secret = redactedItems;
+}
 
-    console.log('Loaded configuration file:');
-    console.log(rawdata.toString());
-    return JSON.parse(rawdata);    
-};
+module.exports = config;

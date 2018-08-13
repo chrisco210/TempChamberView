@@ -1,9 +1,21 @@
 {
-    "production": false, 
+    "production": false,
+
+    "api": {    
+        "dataEgg": "egg00802fbeaf1b0130",
+        "dataSensors": ["temperature", "humidity", "co", "no2"]
+    },
+    
     "database": {
         "path": "."
     },
+
     "server": {
         "port": 3000
+    },
+
+    "secret": {
+        "extern": "./redacted.json"
     }
+
 }

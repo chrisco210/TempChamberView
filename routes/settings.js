@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var operations = require('../src/instruction-manager');
 var DB = require('../src/db');
 var db = new DB();
 var crypto = require('crypto');

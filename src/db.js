@@ -1,10 +1,10 @@
 var config = require('./config')();
 
 
-//Do not modify beyond this point
 const sqlite = require('sqlite3').verbose();
 const fileExists = require('file-exists');
 const bcrypt = require('bcrypt');
+
 const SALT_ROUNDS = 10;
  
 //Permissions

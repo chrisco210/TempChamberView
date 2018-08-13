@@ -1,18 +1,18 @@
+var config = require('../config');
+
 const express = require('express');
 const router = express.Router();
-const path = require('path');
-const DB = require('../src/db');
-const redacted = require('../redacted.js');
 const request = require('request');
 const moment = require('moment');
+
+const DB = require('../src/db');
 const instructionMan = require('../src/instruction-manager');
-const sqlstring = require('sqlstring');
+
 var db = new DB();
 
 var manager = new instructionMan.Manager();
 
 
-const EGG_SERIAL = 'egg00802fbeaf1b0130';
 
 //Get recent instructions
 router.post('/instructions/recent', (req, res, next) => {
@@ -77,18 +77,17 @@ router.get('/sensors', (req, res, next) => {
 router.post('/sensors', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.READ_SENSOR).then((validated) => {
 
-        if(redacted.AQE_API_KEY === undefined) {
+        if(config.secret.AQE_API_KEY === undefined) {
             console.error('WARN: Undefined api key.  This is most likely unintentional');
         }
 
-        console.log(EGG_SERIAL);
 
         let options = {
             method: 'GET',
-            uri: `https://airqualityegg.wickeddevice.com/api/v1/most-recent/messages/device/${EGG_SERIAL}`,
+            uri: `https://airqualityegg.wickeddevice.com/api/v1/most-recent/messages/device/${config.api.dataEgg}`,
             headers: {
                 'User-Agent': 'request',
-                'Authorization': `Bearer ${redacted.AQE_API_KEY}`,
+                'Authorization': `Bearer ${config.secret.AQE_API_KEY}`,
             }
         };
 
@@ -109,7 +108,7 @@ router.post('/sensors', (req, res, next) => {
                     sendObj.error = 'Error encountered: ' + parsedBody.error;
                     res.statusCode = 400;
                 } else {
-                    ['temperature', 'humidity', 'co', 'no2'].forEach((sensor) => {
+                    config.api.dataSensors.forEach((sensor) => {
                         if(parsedBody[sensor]) {
                             let sensorData = parsedBody[sensor];
                             sendObj.data.push({name: sensor, lastReport: sensorData.date, value: sensorData['converted-value'], units: sensorData['converted-units']});
