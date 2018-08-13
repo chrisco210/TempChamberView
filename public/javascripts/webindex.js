@@ -1,5 +1,6 @@
 var latestData = {};
 var latestInstructions = [];
+var runningInstruction = {};
 
 var operationHTML = {};
 
@@ -7,7 +8,7 @@ var template = '<p><%= JSON.stringify(data) %></p>';
 var TEMPLATE_TAB = '<li class="tab col s3"><a href="#<%=data.name%>" class="blue-text"><%=data.name%></a></li>';
 var TEMPLATE_CARD = '<div class="col s12 " id="<%=data.name%>"><h3 class="center-align"><%=data.name%></h3><p class="center-align"><%= data.value + \' \' + data.units%></p></div>';
 var TEMPLATE_COLLAPSE = '<li><div class="collapsible-header"><%=op.instruction%></div><div class="collapsible-body"><span><%=JSON.stringify(op.args)%></span></div></li>';
-
+var TEMPLATE_RUNNING = '<p><%=JSON.stringify(running)%></p>';
 var sensorTypes = ['temperature', 'humidity',];
 
 var first = true;
@@ -91,6 +92,23 @@ function updateInstructionQueue() {
             console.log(e);
         }
     };
+
+    var runningReq = new XMLHttpRequest();
+
+    runningReq.open('POST', '/api/instructions/running', true);
+    runningReq.setRequestHeader('authorization', 'tempkey');
+    runningReq.send();
+
+    runningReq.onreadystatechange = function(e) {
+        if(runningReq.readyState == 4 && runningReq.status == 200) {
+            console.log(runningReq);
+            runningInstruction = JSON.parse(runningReq.responseText);
+            var render = ejs.render(TEMPLATE_RUNNING, {running: runningInstruction});
+            $('#running-instruction').html(render);
+        } else {
+            console.log(e);
+        }
+    };
 }
 
 //Function to handle new selection in dropdown
@@ -105,6 +123,23 @@ function handleChange() {
 
     $('.collapsible').collapsible();
 
+}
+
+function runInstruction() {
+    var run = new XMLHttpRequest();
+
+    run.open('POST', '/api/instructions/run', true);
+    run.setRequestHeader('authorization', 'tempkey');
+    run.send();
+
+    run.onreadystatechange = function(e) {
+        if(run.readyState == 4 && run.status == 200) {
+            console.log(run);
+            console.log(run.responseText);
+        } else {
+            console.log(e);
+        }
+    };
 }
 
 $(document).ready(function() {

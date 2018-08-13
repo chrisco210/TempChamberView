@@ -14,14 +14,6 @@ var manager = new instructionMan.Manager();
 
 const EGG_SERIAL = 'egg00802fbeaf1b0130';
 
-router.post('/', function(req, res, next) {
-    validateHeader(req.headers).then((validated) => {
-        res.send('200: The api key works.  Open in a browser to see documentation.' + validated);
-    }).catch((reason) => {
-        res.redirect('/login?continue=' + encodeURIComponent('/api'));
-    });
-});
-
 //Get recent instructions
 router.post('/instructions/recent', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.READ_INSTRUCTION).then((validated) => {
@@ -36,6 +28,7 @@ router.post('/instructions/recent', (req, res, next) => {
 //Push an instruction onto the stack
 router.post('/instructions/push', (req, res, next) => {
     if(req.session.auth) {
+        console.log(JSON.stringify(req.body));
         let body = Object.assign({}, req.body);
         let operation = body.operation;
 
@@ -50,14 +43,30 @@ router.post('/instructions/push', (req, res, next) => {
     }
 });
 
-router.post('/instructions/grab', (req, res, next) => {
-    validateHeader(req.headers, DB.PERMISSIONS.WRITE_INSTRUCTION).then((validated) => {
-
+//Get running instruction
+router.post('/instructions/running', (req, res, next) => {
+    validateHeader(req.headers, DB.PERMISSIONS.READ_INSTRUCTION).then((validated) => {
+        res.send(JSON.stringify(manager.getRunningInstruction()));
     }).catch((reason) => {
-        res.status = 401;
-        res.send('Unauthorized API key. Key does not have permission WRITE_INSTRUCTION');
+        console.error(reason);
+        res.statusCode = 401;
+        res.send('401 Unauthorized: ' + reason);
     });
 });
+
+//Run the most recent instruction. DEBUG ONLY
+router.post('/instructions/run', (req, res, next) => {
+    validateHeader(req.headers, DB.PERMISSIONS.RUN_INSTRUCTION).then((validated) => {
+        manager.runInstruction();
+        res.send('Ran most recent instruction');
+    }).catch((reason) => {
+        console.error(reason);
+        res.statusCode = 500;
+        res.send('401 Unauthorized: ' + reason);
+    });
+});
+
+
 
 //sensor data api routes
 

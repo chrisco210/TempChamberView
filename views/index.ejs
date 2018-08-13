@@ -1,7 +1,7 @@
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <%-include('head', {title: 'TempChamberControl'})%>
-        <meta charset="UTF-8">
         <meta name="description" content="Control panel for the WickedDevice temperature calibration chamber">
         <meta name="keywords" content="Control, Temperature, Humidity, Air Quality, Egg, Wicked Device">
     </head>
@@ -35,7 +35,6 @@
                                     <%}%>
                                 </div>
                             </div>
-                            
                             <div class="row">
                                 <div class="input-field col s4 push-s8">
                                     <input class="btn" type="submit" value="Push"> 
@@ -44,10 +43,17 @@
                         </form>
                     </div>
                     <div id="recent-instructions" class="col s12 m6 l6">
-                        <h3 class="center-align">Queued Instructions</h3>
-                        <ul id="instruction-display" class="collapsible z-index-1">
-                            
-                        </ul>
+                        <div class="row">
+                            <h3 class="center-align">Running Instruction</h3>
+                            <div id="running-instruction">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h3 class="center-align">Queued Instructions</h3>
+                            <ul id="instruction-display" class="collapsible z-index-1"></ul>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -14,6 +14,7 @@ const PERMISSIONS = {
     READ_SENSOR: 1,         //Read data from sensors
     READ_INSTRUCTION: 2,    //Read instructions from queue
     WRITE_INSTRUCTION: 3,        //write instructions to queue.  Also requires authentication in session
+    RUN_INSTRUCTION: 4
 };
 
 const SQLITE_DATATYPES = {
@@ -313,6 +314,10 @@ class DB {
                                     console.log('Has permission WRITE_INSTRUCTION');
                                     resolve(true);
                                 }
+                                break;
+                            case PERMISSIONS.RUN_INSTRUCTION:
+                                console.log('Running instruction from stack, DEBUG ONLY');
+                                resolve(true);
                                 break;
                             default:
                                 console.log(`Unexpected permission with code: ${permission}`);
