@@ -1,0 +1,9 @@
+{
+    "production": false, 
+    "database": {
+        "path": "."
+    },
+    "server": {
+        "port": 3000
+    }
+}

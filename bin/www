@@ -1,17 +1,5 @@
 #!/usr/bin/env node
-const SERVER_PORT = '3000';
-
-/**
- * Setup database connection
- * Before first run, use create-database.js to generate the database
- */
-var DB = require('../src/db');
-
-let db = new DB();
-db.select('key', 'apikeys').then((rows) => {
-  console.log('Activated API Keys');
-  console.log(rows);
-});
+var config = require('src/config.js')();
 
 /**
  * Module dependencies.
@@ -25,7 +13,7 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || SERVER_PORT);
+var port = normalizePort(process.env.PORT || config.server.port);
 app.set('port', port);
 
 /**

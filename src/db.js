@@ -1,7 +1,5 @@
-//Sets if the database is in production mode.  Set this BEFORE running create-database.js
-const PRODUCTION = false;   
-//Sets the path of the database.  Don't change unless you know what you are doing.   
-const DB_PATH = '.';        
+var config = require('./config')();
+
 
 //Do not modify beyond this point
 const sqlite = require('sqlite3').verbose();
@@ -36,7 +34,7 @@ class DB {
      * Construct an sqlite database
      */
     constructor() {
-        this.db = new sqlite.Database(`${DB_PATH}/db-${PRODUCTION ? 'production' : 'testing'}.db`);
+        this.db = new sqlite.Database(`${config.database.path}/db-${config.production ? 'production' : 'testing'}.db`);
     }
 
     /**
@@ -45,7 +43,7 @@ class DB {
      * Currently does not work
      */
     static dbExists() {
-        return fileExists(`${DB_PATH}/db-${PRODUCTION ? 'production' : 'testing'}.db`);
+        return fileExists(`${config.database.path}/db-${config.production ? 'production' : 'testing'}.db`);
     }
 
     /**
@@ -475,7 +473,6 @@ function _eq(columnName, to, type, escape) {
 }
 
 module.exports = DB;
-module.exports.PRODUCTION = PRODUCTION;
 module.exports.PERMISSIONS = PERMISSIONS;
 module.exports.SQLITE_DATATYPES = SQLITE_DATATYPES;
 module.exports._strc = _strc;

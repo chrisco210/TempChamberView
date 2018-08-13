@@ -1,4 +1,6 @@
 let Job = require('./job');
+var ExecManager = require('./execution-manager');
+
 
 const OPERATIONS = {
     SET_TEMP: {options: [{name: 'turns', type: 'number'}], name: 'settemp', desc: 'Set the temperature of the chamber using the number of turns', file: 'src/jobs/settemp'}, 
@@ -8,15 +10,17 @@ const OPERATIONS = {
 
 /**
  * Instruction manager
+ * The instruction manager has a queue of instructions waiting to be executed
  */
 class Manager {
 
     /**
-     * Construct an instruction manager 
-     */
+     * Construct an instruction manager      
+    */
     constructor() {
-        this.instructionStack = [];
-        this.running = null;
+        this.instructionStack = [];     //Instruction stack
+        this.running = null;    //Last run instruction
+        this.exec = new ExecManager(this);
     }
 
     /**
@@ -25,6 +29,8 @@ class Manager {
      */
     pushInstruction(instruction) {
         this.instructionStack.push(instruction);
+
+        this.exec.onpush();
     }
 
     /**
@@ -53,13 +59,14 @@ class Manager {
     /**
      * Run the instruction at the top of the instruction stack
      */
-    runInstruction() {
+    runInstruction(cb) {
         this.running = this.instructionStack[0];
 
         let job = new Job(this.running.file, this.running.argsAsArray(), () => {
-            console.log('finished');
-            this.removeInstruction(0);
+            console.log('Instruction finished executing');
+            this.exec.oncomplete();
         });
+
     }
 
     /**
@@ -68,6 +75,7 @@ class Manager {
      */
     removeInstruction(instruction) {
         this.instructionStack.splice(instruction, 1);
+        console.log(`New instrman state: ${JSON.stringify(this.instructionStack)}`);
     }
 }
 
