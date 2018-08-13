@@ -1,3 +1,15 @@
+var production;
+if(process.argv.length <= 2) {
+    console.log('WARN: Production mode not specified.  Assuming development');
+} else if(process.argv[2] === 'prod'){
+   production = true;
+} else if(process.argv[2] === 'dev') {
+    production = false;
+} else {
+    console.error('ERROR: illegal environment specification.  Specify either prod or dev.  Ex: npm run install -- prod|dev');
+    process.exit(1);
+}
+
 //Script to be ran after install
 var fs = require('fs');
 var path = require('path');
@@ -6,7 +18,7 @@ var crypto = require('crypto');
 
 
 
-var defaultConfig = '{"production":false,"api":{"dataEgg":"egg00802fbeaf1b0130","dataSensors":["temperature","humidity","co","no2"]},"database":{"path":"."},"server":{"port":3000},"operations":[{"options":[{"name":"turns","type":"number"}],"name":"settemp","desc":"Set the temperature of the chamber using the number of turns","file":"src/jobs/settemp"},{"options":[],"name":"Calibration","desc":"Run temperature egg calibration routine.","file":"src/jobs/calibrate"},{"options":[{"name":"test1","type":"text"},{"name":"test2","type":"text"}],"name":"test","file":"src/jobs/test.js"}],"secret":{"extern": false, "AQE_API_KEY":"","COOKIE_SECRET":""}}';
+var defaultConfig = `{"production":${production ? 'true' : 'false'},"api":{"dataEgg":"egg00802fbeaf1b0130","dataSensors":["temperature","humidity","co","no2"]},"database":{"path":"."},"server":{"port":3000},"operations":[{"options":[{"name":"turns","type":"number"}],"name":"settemp","desc":"Set the temperature of the chamber using the number of turns","file":"src/jobs/settemp"},{"options":[],"name":"Calibration","desc":"Run temperature egg calibration routine.","file":"src/jobs/calibrate"},{"options":[{"name":"test1","type":"text"},{"name":"test2","type":"text"}],"name":"test","file":"src/jobs/test.js"}],"secret":{"extern": false, "AQE_API_KEY":"","COOKIE_SECRET":""}}`;
 
 console.log('Creating config file');
 if(fs.existsSync(path.join(__dirname, '../config.json'))) {
@@ -52,7 +64,7 @@ new Promise((resolve, reject) => {
             genKey = 'tempkey';
         }
 
-        return db.insertApiKey(genKey, 'apikeys', {readSensor: true, readInstructions: true, writeInstructions: true}).catch((err) => {
+        return db.insertApiKey(genKey, 'apikeys', {readSensor: true, readInstructions: true, writeInstructions: true, }).catch((err) => {
             console.error(err);
         });
 

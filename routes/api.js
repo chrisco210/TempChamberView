@@ -65,8 +65,12 @@ router.get('/sensors', (req, res, next) => {
 router.post('/sensors', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.READ_SENSOR).then((validated) => {
 
-        if(config.secret.AQE_API_KEY === undefined) {
-            console.error('WARN: Undefined api key.  This is most likely unintentional');
+        if(config.secret.AQE_API_KEY === undefined || config.secret.AQE_API_KEY === '') {
+            console.error('WARN: Undefined or empty api key.  This is most likely unintentional');
+        }
+
+        if(config.api.dataEgg === undefined || config.api.dataEgg === '') {
+            console.error('WARN: Undefined or empty egg serial.  This is most likely unintentional');
         }
 
 
