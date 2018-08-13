@@ -2,6 +2,8 @@ var latestData = {};
 var latestInstructions = [];
 var runningInstruction = {};
 
+var KEY = '{{api_key_insert}}';
+
 var operationHTML = {};
 
 var template = '<p><%= JSON.stringify(data) %></p>';
@@ -18,7 +20,7 @@ function updateSensorData() {
     var request = new XMLHttpRequest();
 
     request.open('POST', '/api/sensors', true);
-    request.setRequestHeader('authorization', 'tempkey');
+    request.setRequestHeader('authorization', KEY);
     request.send();
 
 
@@ -64,7 +66,7 @@ function updateInstructionQueue() {
     var request = new XMLHttpRequest();
 
     request.open('POST', '/api/instructions/recent', true);
-    request.setRequestHeader('authorization', 'tempkey');
+    request.setRequestHeader('authorization', KEY);
     request.send();
 
     request.onreadystatechange = function(e) {
@@ -96,7 +98,7 @@ function updateInstructionQueue() {
     var runningReq = new XMLHttpRequest();
 
     runningReq.open('POST', '/api/instructions/running', true);
-    runningReq.setRequestHeader('authorization', 'tempkey');
+    runningReq.setRequestHeader('authorization', KEY);
     runningReq.send();
 
     runningReq.onreadystatechange = function(e) {
@@ -123,23 +125,6 @@ function handleChange() {
 
     $('.collapsible').collapsible();
 
-}
-
-function runInstruction() {
-    var run = new XMLHttpRequest();
-
-    run.open('POST', '/api/instructions/run', true);
-    run.setRequestHeader('authorization', 'tempkey');
-    run.send();
-
-    run.onreadystatechange = function(e) {
-        if(run.readyState == 4 && run.status == 200) {
-            console.log(run);
-            console.log(run.responseText);
-        } else {
-            console.log(e);
-        }
-    };
 }
 
 $(document).ready(function() {
