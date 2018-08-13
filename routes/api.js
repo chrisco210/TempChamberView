@@ -1,4 +1,4 @@
-var config = require('../config');
+var config = require('../src/config');
 
 const express = require('express');
 const router = express.Router();
@@ -50,18 +50,6 @@ router.post('/instructions/running', (req, res, next) => {
     }).catch((reason) => {
         console.error(reason);
         res.statusCode = 401;
-        res.send('401 Unauthorized: ' + reason);
-    });
-});
-
-//Run the most recent instruction. DEBUG ONLY
-router.post('/instructions/run', (req, res, next) => {
-    validateHeader(req.headers, DB.PERMISSIONS.RUN_INSTRUCTION).then((validated) => {
-        manager.runInstruction();
-        res.send('Ran most recent instruction');
-    }).catch((reason) => {
-        console.error(reason);
-        res.statusCode = 500;
         res.send('401 Unauthorized: ' + reason);
     });
 });

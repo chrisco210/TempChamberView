@@ -9,5 +9,8 @@ if(config.secret.extern) {
     let redactedItems = JSON.parse(fs.readFileSync(config.secret.extern));
     config.secret = redactedItems;
 }
+console.log('Config:');
+console.log(config);
+
 
 module.exports = config;

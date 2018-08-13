@@ -1,12 +1,7 @@
 let Job = require('./job');
 var ExecManager = require('./execution-manager');
+var config = require('./config');
 
-
-const OPERATIONS = {
-    SET_TEMP: {options: [{name: 'turns', type: 'number'}], name: 'settemp', desc: 'Set the temperature of the chamber using the number of turns', file: 'src/jobs/settemp'}, 
-    RUN_ROUTINE: {options: [], name: 'Calibration', desc: 'Run temperature egg calibration routine.', file: 'src/jobs/calibrate'},
-    TEST: {options: [{name: 'test1', type: 'text'}, {name: 'test2', type: 'text'}], name: 'test', file: 'src/jobs/test.js'}
-};
 
 /**
  * Instruction manager
@@ -93,11 +88,13 @@ class Instruction {
         this.instruction = op;
         this.args = options;
         
-        for(let property in OPERATIONS) {
-            if(OPERATIONS[property].name === op) {
-                this.file = OPERATIONS[property].file;
+        config.operations.forEach((property) => {
+            console.log(`${property}==${op}`);
+            console.log(property.name === op);
+            if(property.name === op) {
+                this.file = property.file;
             }
-        }
+        });
     }
 
     argsAsArray() {
@@ -110,7 +107,5 @@ class Instruction {
         return retArr;
     }
 }
-
-module.exports.OPERATIONS = OPERATIONS;
 module.exports.Manager = Manager;
 module.exports.Instruction = Instruction;

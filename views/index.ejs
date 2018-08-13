@@ -21,18 +21,18 @@
                         <form action="/api/instructions/push" method="POST">
                             <div class="input-field col s12">
                                 <select id="operation-selector" onchange="handleChange()" name="operation" type="text">
-                                    <% for(let x in ops) { %>
-                                    <%- include('formselect', {op: ops[x]})  %>
-                                    <%}%>
+                                    <% ops.forEach((x) => { %>
+                                    <%- include('formselect', {op: x})  %>
+                                    <%})%>
                                 </select>
                             </div>
                             <div class="row">
                                 <div class="input-field col s12" id="args-input">
-                                    <% for(let x in ops) {%>
-                                        <% if(ops[x].options.length !== 0) {%>
-                                            <%- include('arginput', {operation: ops[x]})%>
+                                    <% ops.forEach((x) => {%>
+                                        <% if(x.options.length !== 0) {%>
+                                            <%- include('arginput', {operation: x})%>
                                         <%}%>
-                                    <%}%>
+                                    <%})%>
                                 </div>
                             </div>
                             <div class="row">
