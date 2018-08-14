@@ -1,6 +1,6 @@
 ./production.db
 ./redacted.js
-redacted.js
+redacted.json
 node_modules/
 public/css/materialize.css
 public/css/materialize.css.map

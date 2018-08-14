@@ -13,7 +13,7 @@ After setting the client up, you can run the program using `npm start`.  You can
 web to access it from anywhere.  
 
 ## First time login
-The default username for login is root, the default password is password.  You can change these in the admin panel (coming soon).
+The default username for login is root, the default password is password.  You can (and should) change the password in the settings panel.
 
 # Temperature Chamber API 
 ## Instruction API
@@ -25,9 +25,6 @@ Requires an authorization header containing a key with the permission READ_INSTR
 Push a new instruction onto the instruction stack.
 
 Requires a valid session. This should only be done from the included web interface
-
-Requires an authorization header containing a key with the permission WRITE_INSTRUCTION  
-
 ## Sensor API
 ### api/sensors
 Get the most recent sensor data from the reference egg as json
