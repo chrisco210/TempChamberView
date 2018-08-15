@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "install": "node ./scripts/postinstall.js",
-    "postinstall": "npm run scss",
+    "postinstall": "node ./scripts/postinstall.js && npm run scss",
     "scss": "scss -t compressed public/scss/materialize.scss public/css/materialize.css"
   },
   "dependencies": {

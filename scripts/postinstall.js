@@ -1,6 +1,7 @@
 var production;
 if(process.argv.length <= 2) {
-    console.log('WARN: Production mode not specified.  Assuming development');
+    console.log('WARN: Production mode not specified.  Assuming prod');
+    production = true;
 } else if(process.argv[2] === 'prod'){
    production = true;
 } else if(process.argv[2] === 'dev') {

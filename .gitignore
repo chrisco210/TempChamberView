@@ -1,5 +1,6 @@
 ./production.db
 ./redacted.js
+config.json
 redacted.json
 node_modules/
 public/css/materialize.css

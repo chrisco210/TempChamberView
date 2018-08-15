@@ -1,5 +1,5 @@
 {
-    "production": false,
+    "production": true,
     "api": {
         "dataEgg": "egg00802fbeaf1b0130",
         "dataSensors": [
@@ -49,7 +49,7 @@
         }
     ],
     "secret": {
-        "extern": "./redacted.json",
+        "extern": false,
         "AQE_API_KEY": "",
         "COOKIE_SECRET": ""
     }
