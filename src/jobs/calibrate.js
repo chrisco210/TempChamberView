@@ -3,7 +3,7 @@ var board = new five.Board({repl: false, debug: true});
 
 const STEPPER_RPM = 5;
 
-const CYCLE_TIME = 30000; //18000000; //5 hours in ms
+const CYCLE_TIME = 18000000; //5 hours in ms
 const STAGE_POSITIONS = [-190, 130, 66, 35, 37, 38, -116];    //Cycle positions to move
 
 var opts = {
