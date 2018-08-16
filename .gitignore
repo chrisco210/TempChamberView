@@ -1,7 +1,8 @@
-./production.db
+./db-production.db
+./db-testing.db
 ./redacted.js
-config.json
-redacted.json
+./config.json
+./redacted.json
 node_modules/
 public/css/materialize.css
 public/css/materialize.css.map
