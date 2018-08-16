@@ -5,8 +5,13 @@ This app is used to control the temperature of the WickedDevice temperature cali
 There are two main components of this app, an express web server which supplies the web interface for controlling the temperature, and another 
 app that runs on the raspi that controls the temperature of the chamber that polls the main app to check for new instructions.
 
+# Dependencies
+scss is required to compile the CSS files.  Check if you have scss by typing `scss --version` (ideally before running npm install).  If you do not, install the ruby version of sass by running `gem install sass -v 3.4.22`.
+
+In addition, you will need nodejs, as well as npm.
+
 # Installation
-After cloning the repository, type `npm install` to install all dependencies and run all setup scripts. These will create the database and generate all keys required.  
+After cloning the repository, type `npm install` to install all dependencies and run all setup scripts. These will create the database and generate all api keys required.  
 
 # Config
 By default the config looks like this (Without comments):
@@ -18,7 +23,6 @@ By default the config looks like this (Without comments):
         "dataSensors": [        //The names of the sensors that you want to be displayed.
             "temperature",
             "humidity",
-            "co",
             "no2"
         ]
     },
@@ -66,7 +70,7 @@ By default the config looks like this (Without comments):
     //Super secret stuff
     "secret": {
         "extern": false,        //Use this option to provide a path to an external file to hold secrets. Default: false
-        "AQE_API_KEY": "",      //Put your Air Quality Egg API Key here.  You will need this for the dashboard to display sensor data Default: ""
+        "AQE_API_KEY": "",      //Put your Air Quality Egg API Key here.  You will need this for the dashboard to display sensor 
         "COOKIE_SECRET": ""     //The cookie secret.  This can be any random string     
     }
 }

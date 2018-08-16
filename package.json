@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall": "node ./scripts/postinstall.js && npm run scss",
-    "scss": "scss -t compressed public/scss/materialize.scss public/css/materialize.css"
+    "postinstall": "node ./scripts/postinstall.js && npm run-script scss",
+    "scss": "sass   -t compressed public/scss/materialize.scss public/css/materialize.css"
   },
   "dependencies": {
     "bcrypt": "^3.0.0",

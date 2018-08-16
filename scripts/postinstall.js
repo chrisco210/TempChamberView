@@ -59,7 +59,7 @@ new Promise((resolve, reject) => {
     ]).then((res) => {
         if(config.production) {
             let sha = crypto.createHash('sha1').update('' + Math.random());
-            let genKey = sha.digest('hex');
+            genKey = sha.digest('hex');
         } else {    //Generate tempkey
             console.log('Inserting API key tempkey');         
             genKey = 'tempkey';
