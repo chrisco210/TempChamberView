@@ -43,6 +43,17 @@ router.post('/instructions/push', (req, res, next) => {
     }
 });
 
+//Remove an instruction or stop a running instruction
+router.post('/instructions/kill', (req, res, next) => {
+    if(req.session.auth) {
+        manager.pushInstruction(new instructionMan.Instruction(operation, body));
+        
+        res.redirect('/');
+    } else {
+        res.statusCode = 401;
+        res.send('You must be signed in to push instructions.');
+    }
+});
 //Get running instruction
 router.post('/instructions/running', (req, res, next) => {
     validateHeader(req.headers, DB.PERMISSIONS.READ_INSTRUCTION).then((validated) => {
@@ -53,6 +64,7 @@ router.post('/instructions/running', (req, res, next) => {
         res.send('401 Unauthorized: ' + reason);
     });
 });
+
 
 
 
@@ -141,7 +153,10 @@ router.get('/', (req, res, next) => {
  */
 function validateHeader(headers, permission) {
     return new Promise((resolve, reject) => {
-        if(!headers.authorization) {
+        if(!config.production) {
+            resolve('authenticated');
+        }
+        else if(!headers.authorization) {
             reject('missing authorization header');
         } else {
             return db.validateKey(headers.authorization, permission).then((isValidated) => {

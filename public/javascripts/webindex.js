@@ -86,7 +86,7 @@ function updateInstructionQueue() {
             console.log(list);
 
             if(list === '') {
-                $('#instruction-display').html('<p>No new instructions</p>');
+                $('#instruction-display').html(ejs.render(TEMPLATE_COLLAPSE, {op: {instruction: 'No new instructions', args: []}}));
             } else {
                 $('#instruction-display').html(list);
             }

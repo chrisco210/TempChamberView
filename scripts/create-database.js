@@ -1,7 +1,7 @@
 //Utility to generate a simple testing databse
 //to run: node create-database
 
-const DB = require('./src/db');
+const DB = require('../src/db');
 
 let db = new DB();
 
@@ -11,7 +11,7 @@ db.makeTable('apikeys', [{name: 'key', type: 'text', primary: true},
                         {name: 'READ_INSTRUCTION', type: 'INTEGER'},
                         {name: 'WRITE_INSTRUCTION', type: 'INTEGER'}
                     ]).then((res) => {
-    return db.insertApiKey('tempkey', 'apikeys', {readSensor: true, readInstructions: true, writeInstructions: true});
+    return db.insertApiKey('{{api_key_insert}}', 'apikeys', {readSensor: true, readInstructions: true, writeInstructions: true});
 }).then((res) => {
     return db.select('*', 'apikeys').then((rows) => {
         console.log(rows);

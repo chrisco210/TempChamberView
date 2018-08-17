@@ -22,6 +22,10 @@ class Job {
             console.log(`Message from ${sender}: ${message}`);
         });
     }
+
+    kill(signal) {
+        this.process.kill(signal);
+    }
 }
 
 

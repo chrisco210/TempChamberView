@@ -15,6 +15,7 @@ class Manager {
     constructor() {
         this.instructionStack = [];     //Instruction stack
         this.running = null;    //Last run instruction
+        this.runningJob = null;
         this.exec = new ExecManager(this);
     }
 
@@ -57,11 +58,23 @@ class Manager {
     runInstruction(cb) {
         this.running = this.instructionStack[0];
 
-        let job = new Job(this.running.file, this.running.argsAsArray(), () => {
+        this.runningJob = new Job(this.running.file, this.running.argsAsArray(), () => {
             console.log('Instruction finished executing');
             this.exec.oncomplete();
         });
 
+    }
+
+    /**
+     * Terminates a running job. Returns true if terminated, false if no job running
+     */
+    stopJob() {
+        if(this.runningJob) {
+            this.runningJob.kill();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

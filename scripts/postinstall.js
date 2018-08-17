@@ -62,7 +62,7 @@ new Promise((resolve, reject) => {
             genKey = sha.digest('hex');
         } else {    //Generate tempkey
             console.log('Inserting API key tempkey');         
-            genKey = 'tempkey';
+            genKey = '{{api_key_insert}}';
         }
 
         return db.insertApiKey(genKey, 'apikeys', {readSensor: true, readInstructions: true, writeInstructions: true, }).catch((err) => {
