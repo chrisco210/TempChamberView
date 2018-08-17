@@ -46,12 +46,27 @@ router.post('/instructions/push', (req, res, next) => {
 //Remove an instruction or stop a running instruction
 router.post('/instructions/kill', (req, res, next) => {
     if(req.session.auth) {
-        manager.pushInstruction(new instructionMan.Instruction(operation, body));
+        manager.stopJob();
         
         res.redirect('/');
     } else {
         res.statusCode = 401;
-        res.send('You must be signed in to push instructions.');
+        res.send('You must be signed in to stop jobs.');
+    }
+});
+
+//Remove an instruction or stop a running instruction
+router.get('/instructions/delete', (req, res, next) => {
+    console.log('Deleting instruction: ' + req.query.inst);
+    if(req.session.auth) {
+        console.log(req.body);
+
+        manager.removeInstruction(req.query.inst);
+        
+        res.redirect('/');
+    } else {
+        res.statusCode = 401;
+        res.send('You must be signed in to delete instructions.');
     }
 });
 //Get running instruction
