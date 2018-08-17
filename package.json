@@ -5,7 +5,10 @@
   "scripts": {
     "start": "node ./bin/www",
     "postinstall": "node ./scripts/postinstall.js && npm run-script scss",
-    "scss": "sass   -t compressed public/scss/materialize.scss public/css/materialize.css"
+    "generate-scss": "sass   -t compressed public/scss/materialize.scss public/css/materialize.css",
+    "generate-config": "node ./scripts/genconfig.js",
+    "generate-database": "node ./scripts/gendatabase.js",
+    "generate-js": "node scripts/renderwebindex.js"
   },
   "dependencies": {
     "bcrypt": "^3.0.0",
