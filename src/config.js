@@ -7,7 +7,7 @@ let config = hjson.parse(fs.readFileSync(path.join(process.cwd(), './config.hjso
 
 //Check for extern secret (for use with public git repos)
 if(config.secret.extern) {
-    let redactedItems = hjson.parse(fs.readFileSync(config.secret.extern));
+    let redactedItems = hjson.parse(fs.readFileSync(config.secret.extern).toString());
     config.secret = redactedItems;
 }
 console.log('Config:');

@@ -28,10 +28,10 @@
                             </div>
                             <div class="row">
                                 <div class="input-field col s12" id="args-input">
+                                
                                     <% config.operations.forEach((x) => {%>
-                                        <% if(x.options.length !== 0) {%>
+                                        <%=x.desc%>
                                             <%- include('arginput', {operation: x})%>
-                                        <%}%>
                                     <%})%>
                                 </div>
                             </div>

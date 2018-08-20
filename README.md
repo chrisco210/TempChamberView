@@ -16,71 +16,117 @@ All other depndencies are automatically installed during installation.
 After cloning the repository, type `npm install` to install all dependencies and run all setup scripts. These will create the database and generate all api keys required, as well as insert them into all required fields.
 
 # Configuration
-By default the config looks like this (Without comments):
+The configuration file is in [hjson](https://hjson.org/). 
+
+By default the config looks like this (Without comments, but you can add them if you want):
 ```
 {
-    "production": true,  //If true, production mode enabled, if false, development mode enabled. Default: true
-    "api": {        //Sensor API settings
-        "dataEgg": "egg00802fbeaf1b0130",   //The serial of the egg to get data from. Default: egg00802fbeaf1b0130
-        "dataSensors": [        //The names of the sensors that you want to be displayed.
-            "temperature",
-            "humidity",
-            "no2"
-        ]
-    },
-    "database": {       //The path to the database file relative to the install directory.  Default: .
-        "path": "."
-    },
-    "server": {     //Web server settings
-        "port": 3000        //The port to host on
-    },
-    "operations": [     //Add operations here
-        {
-            "name": "settemp",      //The name of the operation to be displayed
-            "desc": "Set the temperature of the chamber using the number of turns",     //A useful description of the operation
-            "options": [        //Add arguments to this array by adding more objects
-                {
-                    "name": "turns",        //The name of the option that will be displayed in the label
-                    "type": "number"        //The data type of the option.  Note this must be a valid type attribute of a html input tag
-                }
-            ],
-            
-            "file": "src/jobs/settemp"      //The path, relative to project root, to the nodejs module of this command.
-        },
-        {
-            "options": [],      //If there are no arguments, simply provide a blank array.
-            "name": "Calibration",
-            "desc": "Run temperature egg calibration routine.",
-            "file": "src/jobs/calibrate"
-        },
-        {
-            "options": [        //An example of multiple options
-                {
-                    "name": "test1",
-                    "type": "text"
-                },
-                {
-                    "name": "test2",
-                    "type": "text"
-                }
-            ],
-            "name": "test",
-            "file": "src/jobs/test.js"
-        }
-    ],
+  //Specifies if production mode is enabled. Default: true
+  production: true
+  
+  //API settings
+  api:      
+  {
+    //The egg to collect data from.  Default: egg00802fbeaf1b0130
+    dataEgg: egg00802fbeaf1b0130
+    //The sensors to include on the web page
+    dataSensors:
+    [
+      temperature
+      humidity
+      co
+      no2
+    ]
+  }
+  //Database settings.  Not reccomended to change
+  database:
+  {
+    //The path to the database file
+    path: .
+  }
 
-    //Super secret stuff
-    "secret": {
-        "extern": false,        //Use this option to provide a path to an external file to hold secrets. Default: false
-        "AQE_API_KEY": "",      //Put your Air Quality Egg API Key here.  You will need this for the dashboard to display sensor 
-        "COOKIE_SECRET": ""     //The cookie secret.  This can be any random string     
+  //Server settings
+  server:
+  {
+    //The port to serve the project on
+    port: 3000
+  }
+
+  //Add new operations here.  Add operations by adding more operation objects to the array:
+  //Prototype:
+  /*
+  {
+      name: string      //The name of the operation
+      desc: string      //A description of what the operation does
+      file: string      //The path to the module that will be run when the operation is executed
+      options: [        //The arguments that will be passed to the operation
+          {
+              name: string,         //The name of the argument
+              desc: string,         //A description of what the argument is
+              type: string          //The datatype of the option.  This must be compatable with the type parameter of the html <input> tag
+          }, 
+          ...
+      ]
+  }
+  */
+  operations:
+  [
+    {
+      options:
+      [
+        {
+          name: turns
+          desc: How many turns.  Positive is clockwise, negetive is ccwise
+          type: number
+        }
+      ]
+      name: settemp
+      desc: Set the temperature of the chamber using the number of turns
+      file: src/jobs/settemp
     }
+    {
+      options: []
+      name: Calibration
+      desc: Run temperature egg calibration routine.
+      file: src/jobs/calibrate
+    }
+    {
+      options:
+      [
+        {
+          name: test1
+          type: text
+        }
+        {
+          name: test2
+          type: text
+        }
+      ]
+      name: test
+      file: src/jobs/test.js
+    }
+  ]
+  //Secret things
+  secret:
+  {
+    extern: false       //If you want to provide an external secret file, do so here (eg, you are using a public git repo). Default: false
+    AQE_API_KEY: ""     //Put your air quality egg api key here
+    COOKIE_SECRET: ""       //Put a cookie secret here
+  }
 }
 ```
 
 # Startup
 After setting the client up, you can run the program using `npm start`.  You can access the webpage at localhost:port_number (3000 by default), and can forward it to the 
 web to access it from anywhere.  
+
+## Scripts
+`npm install` will install all dependencies and generate all required things
+`npm run-script generate-scss` will compile the materialize scss files
+`npm run-script generate-config` will generate the default config.hjson file
+`npm run-script generate-database` will generate a default database
+`npm run-script generate-js` will render the webindex file
+
 
 ## First time login
 The default username for login is root, the default password is password.  You can (and should) change the password in the settings panel.
