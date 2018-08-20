@@ -115,6 +115,7 @@ function updateInstructionQueue() {
 
 //Function to handle new selection in dropdown
 function handleChange() {
+    
     var value = '' + document.getElementById('operation-selector').value;
     
     if(operationHTML[value] === undefined) {
@@ -124,6 +125,7 @@ function handleChange() {
     }
 
     $('.collapsible').collapsible();
+    $('.tooltipped').tooltip();
 
 }
 
@@ -132,9 +134,10 @@ $(document).ready(function() {
     $('.operation-select-option').toArray().forEach(function(e) {
         operationHTML[e.value] = $('#' + e.value).html();
     });
+    
 
     $('#args-input').html('');
-    $('.tooltipped').tooltip();
+    
     //initialize all select elements
     var elems = document.querySelectorAll('select');
     var instances = M.FormSelect.init(elems);
@@ -150,5 +153,6 @@ $(document).ready(function() {
 
     //Update once every 60 seconds
     setInterval(updateSensorData(), 60000);
+    $('.tooltipped').tooltip();
 
 });

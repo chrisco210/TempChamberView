@@ -6,14 +6,16 @@ There are two main components of this app, an express web server which supplies 
 app that runs on the raspi that controls the temperature of the chamber that polls the main app to check for new instructions.
 
 # Dependencies
-scss is required to compile the CSS files.  Check if you have scss by typing `scss --version` (ideally before running npm install).  If you do not, install the ruby version of sass by running `gem install sass -v 3.4.22`.
+sass is required to compile the CSS files.  Check if you have scss by typing `sass --version` (ideally before running npm install).  If you do not, install the ruby version of sass by running `gem install sass -v 3.4.22`.
 
 In addition, you will need nodejs, as well as npm.
 
-# Installation
-After cloning the repository, type `npm install` to install all dependencies and run all setup scripts. These will create the database and generate all api keys required.  
+All other depndencies are automatically installed during installation.
 
-# Config
+# Installation
+After cloning the repository, type `npm install` to install all dependencies and run all setup scripts. These will create the database and generate all api keys required, as well as insert them into all required fields.
+
+# Configuration
 By default the config looks like this (Without comments):
 ```
 {
@@ -92,7 +94,24 @@ Requires an authorization header containing a key with the permission READ_INSTR
 ### api/instructions/push
 Push a new instruction onto the instruction stack.
 
-Requires a valid session. This should only be done from the included web interface
+Requires a valid session. This should only be done from the web interface
+### api/instructions/kill
+Kill the current running job.
+
+Requires a valid session.  This should only be done from the web interface
+
+### api/instructions/delete
+Delete a job from the queue
+#### Parameters
+##### inst
+Type: url
+Value: The index of the instruction stack to delete from
+
+Requires a valid session.  This should only be done from the web interface 
+### api/instructions/running
+Get the current running instruction
+
+Requires an API key with permission READ_INSTRUCTION
 ## Sensor API
 ### api/sensors
 Get the most recent sensor data from the reference egg as json

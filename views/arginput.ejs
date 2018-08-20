@@ -1,5 +1,6 @@
 <div id="<%=operation.name%>" class="argument-chooser">
+<p><%=operation.desc%></p>
 <%operation.options.forEach((optObj) => {%>
-    <input name="<%=optObj.name%>" type="<%=optObj.type%>" placeholder="<%=optObj.name%> (<%=optObj.type%>)" id="<%=optObj.name%>">
+    <input class="tooltipped" name="<%=optObj.name%>" type="<%=optObj.type%>" placeholder="<%=optObj.name%> (<%=optObj.type%>)" id="<%=optObj.name%>"<%-optObj.desc ? `data-position="top" data-tooltip="${optObj.desc}"`: ''%>>
 <%});%>
 </div>

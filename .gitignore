@@ -1,8 +1,8 @@
 db-production.db
 db-testing.db
 redacted.js
-config.json
-redacted.json
+config.hjson
+redacted.hjson
 node_modules/
 public/css/materialize.css
 public/css/materialize.css.map
