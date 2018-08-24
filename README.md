@@ -122,9 +122,13 @@ web to access it from anywhere.
 
 ## Scripts
 `npm install` will install all dependencies and generate all required things
+
 `npm run-script generate-scss` will compile the materialize scss files
+
 `npm run-script generate-config` will generate the default config.hjson file
+
 `npm run-script generate-database` will generate a default database
+
 `npm run-script generate-js` will render the webindex file
 
 
