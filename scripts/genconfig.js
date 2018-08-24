@@ -51,7 +51,7 @@ var defaultConfig = {
     },
     operations: [
         { options: [{ name: "turns", type: "number" }], name: "settemp", desc: "Set the temperature of the chamber using the number of turns", file: "src/jobs/settemp" },
-        { options: [], name: "Calibration", desc: "Run temperature egg calibration routine.", file: "src/jobs/calibrate" },
+        { options: [{name: "timeout", desc: "The timeout in between temperature changes", type: "number"}], name: "Calibration", desc: "Run temperature egg calibration routine.", file: "src/jobs/calibrate" },
         { options: [{ name: "test1", type: "text" }, { name: "test2", type: "text" }], name: "test", file: "src/jobs/test.js" }
     ],
     secret: {

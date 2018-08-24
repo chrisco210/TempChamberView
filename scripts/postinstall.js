@@ -16,16 +16,39 @@ var fs = require('fs');
 var path = require('path');
 var Mustache = require('mustache');
 var crypto = require('crypto');
+const hjson = require('hjson');
 
 
+var defaultConfig = {
+    production: options.production,
+    api: {
+        dataEgg: "egg00802fbeaf1b0130",
+        dataSensors: ["temperature", "humidity", "co", "no2"]
+    },
+    database: {
+        path: "."
+    },
+    server: {
+        port: 3000
+    },
+    operations: [
+        { options: [{ name: "turns", type: "number" }], name: "settemp", desc: "Set the temperature of the chamber using the number of turns", file: "src/jobs/settemp" },
+        { options: [{name: "timeout", desc: "The timeout in between temperature changes", type: "number"}], name: "Calibration", desc: "Run temperature egg calibration routine.", file: "src/jobs/calibrate" },
+        { options: [{ name: "test1", type: "text" }, { name: "test2", type: "text" }], name: "test", file: "src/jobs/test.js" }
+    ],
+    secret: {
+        extern: false,
+        AQE_API_KEY: "",
+        COOKIE_SECRET: ""
+    }
+};
 
-var defaultConfig = `{"production":${production ? 'true' : 'false'},"api":{"dataEgg":"egg00802fbeaf1b0130","dataSensors":["temperature","humidity","co","no2"]},"database":{"path":"."},"server":{"port":3000},"operations":[{"options":[{"name":"turns","type":"number"}],"name":"settemp","desc":"Set the temperature of the chamber using the number of turns","file":"src/jobs/settemp"},{"options":[],"name":"Calibration","desc":"Run temperature egg calibration routine.","file":"src/jobs/calibrate"},{"options":[{"name":"test1","type":"text"},{"name":"test2","type":"text"}],"name":"test","file":"src/jobs/test.js"}],"secret":{"extern": false, "AQE_API_KEY":"","COOKIE_SECRET":""}}`;
 
 console.log('Creating config file');
-if(fs.existsSync(path.join(__dirname, '../config.json'))) {
+if(fs.existsSync(path.join(__dirname, '../config.hjson'))) {
     console.log('Config already exists. Skipping...');
 } else {
-    fs.writeFileSync(path.join(__dirname, '../config.json'), defaultConfig, (err) => {
+    fs.writeFileSync(path.join(__dirname, '../config.hjson'), hjson.stringify(defaultConfig), (err) => {
         if(err) {
             console.error(err);
         }
