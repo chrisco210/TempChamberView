@@ -44,7 +44,7 @@ router.post('/instructions/push', (req, res, next) => {
 });
 
 //Remove an instruction or stop a running instruction
-router.post('/instructions/kill', (req, res, next) => {
+router.get('/instructions/kill', (req, res, next) => {
     if(req.session.auth) {
         manager.stopJob();
         

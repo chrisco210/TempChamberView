@@ -9,8 +9,8 @@ var operationHTML = {};
 var template = '<p><%= JSON.stringify(data) %></p>';
 var TEMPLATE_TAB = '<li class="tab col s3"><a href="#<%=data.name%>" class="blue-text"><%=data.name%></a></li>';
 var TEMPLATE_CARD = '<div class="col s12 " id="<%=data.name%>"><h3 class="center-align"><%=data.name%></h3><p class="center-align"><%= data.value + \' \' + data.units%></p></div>';
-var TEMPLATE_COLLAPSE = '<li><div class="collapsible-header"><%=op.instruction%></div><div class="collapsible-body"><span><%=JSON.stringify(op.args)%></span></div></li>';
-var TEMPLATE_RUNNING = '<p><%=JSON.stringify(running)%></p>';
+var TEMPLATE_COLLAPSE = '<li><div class="collapsible-header"><%=op.instruction%></div><div class="collapsible-body"><span><%=JSON.stringify(op.args)%></span><a class="btn waves-effect waves-red red white-text right" href="api/instructions/delete?inst=<%=index%>">Delete</a></div></li>';
+var TEMPLATE_RUNNING = '<p><%=JSON.stringify(running)%></p><a href="api/instructions/kill" class="btn red waves-effect waves-red">Kill</a>';
 var sensorTypes = ['temperature', 'humidity',];
 
 var first = true;
@@ -79,14 +79,14 @@ function updateInstructionQueue() {
             var list = '';
 
 
-            for(var ii = latestInstructions.length - 1; ii >= 0; ii--) {
-                list += ejs.render(TEMPLATE_COLLAPSE, {op: latestInstructions[ii]});
+            for(var ii = 0; ii < latestInstructions.length; ii++) {
+                list += ejs.render(TEMPLATE_COLLAPSE, {op: latestInstructions[ii], index: ii});
             }
 
             console.log(list);
 
             if(list === '') {
-                $('#instruction-display').html(ejs.render(TEMPLATE_COLLAPSE, {op: {instruction: 'No new instructions', args: []}}));
+                $('#instruction-display').html(ejs.render(TEMPLATE_COLLAPSE, {op: {instruction: 'No new instructions', args: []}, index: -1}));
             } else {
                 $('#instruction-display').html(list);
             }
