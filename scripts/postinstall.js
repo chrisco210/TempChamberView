@@ -20,7 +20,7 @@ const hjson = require('hjson');
 
 
 var defaultConfig = {
-    production: options.production,
+    production: production,
     api: {
         dataEgg: "egg00802fbeaf1b0130",
         dataSensors: ["temperature", "humidity", "co", "no2"]
