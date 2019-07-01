@@ -50,8 +50,8 @@ var defaultConfig = {
         port: 3000
     },
     operations: [
-        { options: [{ name: "turns", type: "number" }], name: "settemp", desc: "Set the temperature of the chamber using the number of turns", file: "src/jobs/settemp" },
-        { options: [{name: "timeout", desc: "The timeout in between temperature changes", type: "number"}], name: "Calibration", desc: "Run temperature egg calibration routine.", file: "src/jobs/calibrate" },
+        { options: [{ name: "turns", type: "number", desc: "The number of turns", typedesc: "number"}], name: "settemp", desc: "Set the temperature of the chamber using the number of turns", file: "src/jobs/settemp" },
+        { options: [{name: "timeout", desc: "The timeout in between temperature changes in minutes", type: "number", typedesc: "minutes"}], name: "Calibration", desc: "Run temperature egg calibration routine.", file: "src/jobs/calibrate" },
         { options: [{ name: "test1", type: "text" }, { name: "test2", type: "text" }], name: "test", file: "src/jobs/test.js" }
     ],
     secret: {
