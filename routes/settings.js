@@ -3,14 +3,24 @@ var router = express.Router();
 var DB = require('../src/db');
 var db = new DB();
 var crypto = require('crypto');
+var config = require('../src/config');
 
 /* GET settings page. */
 router.get('/', function(req, res, next) {
   //Ensure they are logged in, TODO check if they are admin
   if(req.session.auth) {
-    res.render('settings', {session: req.session});
+    res.render('settings', {session: req.session, config: config});
   } else {
     res.header.continue = '/settings';
+    res.redirect('/login');
+  }
+});
+
+router.get('/config/edit', (req, res, next) => {
+  if(req.session.auth) {
+    res.render('')
+  } else {
+    res.header.continue = '/settings/config/edit';
     res.redirect('/login');
   }
 });
@@ -119,4 +129,16 @@ router.post('/users/delete', (req, res, next) => {
   
 });
 
+//Reload the configuration file
+router.post('/config/reload', (req, res, next) => {
+  if(req.session.auth) {
+    config.reload();
+    res.send('Configuration reloaded.  New config:' + JSON.stringify(config));
+  } else {
+    res.status = 403;
+    res.send('Reloading the config requires auth');
+  }
+
+
+});
 module.exports = router;

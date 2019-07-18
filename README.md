@@ -53,7 +53,7 @@ By default the config looks like this (Without comments, but you can add them if
   }
 
   //Add new operations here.  Add operations by adding more operation objects to the array:
-  //Prototype:
+  //Fields:
   /*
   {
       name: string      //The name of the operation
@@ -64,6 +64,7 @@ By default the config looks like this (Without comments, but you can add them if
               name: string,         //The name of the argument
               desc: string,         //A description of what the argument is
               type: string          //The datatype of the option.  This must be compatable with the type parameter of the html <input> tag
+              typedesc: string,     //A description of the parameter datatype, ie "minutes"
           }, 
           ...
       ]

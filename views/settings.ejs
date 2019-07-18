@@ -7,6 +7,7 @@
         <div class="container">
             <div class="row">
                 <div class="col s12 m6 l6">
+                    <!-- User settings --------------------------------------------------------------------------------------------->
                     <h2>User Settings</h2>
                     <form action="settings/users/create" method="POST">
                         <div class="row">
@@ -58,6 +59,7 @@
                     </form>
                 </div>
                 <div class="col s12 m6 l6">
+                    <!--  key settings ----------------------------------------------------------------------------------------------->
                     <h2>Key Settings</h2>
                     <form action="/settings/keys/create" method="POST">
                         <h4>Create API Key</h4>
@@ -95,6 +97,19 @@
                             </div>
                         </div>
                     </form>
+                    <!-- CONFIGURATION ---------------------------------------------------------------->
+                    <h2>Configuration</h2>
+                    <form action="/settings/config/reload" method="POST">
+                        <input type="submit" class="btn" name="reload" value="Reload config" >
+                    </form>
+                    <form action="/settings/config/edit" method="GET">
+                        <h4>Current Configuration:</h4>
+                        <p><%=JSON.stringify(config)%></p>
+                        <input type="submit" class="btn" value="edit">
+                    </form>
+
+
+
                 </div>
             </div>
         </div>
