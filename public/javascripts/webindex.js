@@ -79,12 +79,14 @@ function updateInstructionQueue() {
             var list = '';
 
 
+            //Compile all the html for the instructions retrieved from the instruction queue
             for(var ii = 0; ii < latestInstructions.length; ii++) {
                 list += ejs.render(TEMPLATE_COLLAPSE, {op: latestInstructions[ii], index: ii});
             }
 
             console.log(list);
 
+            //If the list is empty, then there are no instructions queued
             if(list === '') {
                 $('#instruction-display').html(ejs.render(TEMPLATE_COLLAPSE, {op: {instruction: 'No new instructions', args: []}, index: -1}));
             } else {
@@ -95,6 +97,8 @@ function updateInstructionQueue() {
         }
     };
 
+
+    //Now need to request which instruction is running.
     var runningReq = new XMLHttpRequest();
 
     runningReq.open('POST', '/api/instructions/running', true);
@@ -114,6 +118,11 @@ function updateInstructionQueue() {
 }
 
 //Function to handle new selection in dropdown
+/*
+When a new selection is made, the corresponding options are populated into the dropdown menu.  When the option is changed,
+a new set of parameters must be displayed in the form.  This is handled here.  The arguments are placed in teh
+section labeled ARGS INPUT in the ejs file
+ */
 function handleChange() {
     
     var value = '' + document.getElementById('operation-selector').value;
@@ -131,6 +140,9 @@ function handleChange() {
 
 $(document).ready(function() {
 
+
+    //Select the div that contains the parameters for each option in the dropdown, and store its contents in an array
+    //which contains the parameters for each operation in the dropdown
     $('.operation-select-option').toArray().forEach(function(e) {
         operationHTML[e.value] = $('#' + e.value).html();
     });

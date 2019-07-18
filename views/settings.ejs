@@ -4,12 +4,13 @@
     </head>
     <body>
         <%- include('navbar', {session: session, links: [{name: 'API', ref: '/api'}, {name: 'Settings', ref: '/settings'}, {name: 'Logout', ref: '/login/logout'}]});%>
+        <%- include('greeter', {greeting})%>
         <div class="container">
             <div class="row">
                 <div class="col s12 m6 l6">
                     <!-- User settings --------------------------------------------------------------------------------------------->
                     <h2>User Settings</h2>
-                    <form action="settings/users/create" method="POST">
+                    <form action="/settings/users/create" method="POST">
                         <div class="row">
                             <h4>Create new user</h4>
                             <div class="input-field col s12">
@@ -30,7 +31,7 @@
                             </div>
                         </div>
                     </form>
-                    <form action="settings/users/modify" method="POST">
+                    <form action="/settings/users/modify" method="POST">
                         <div class="row">
                             <h4>Change your Password</h4>
                             <div class="input-field col s12 m6 l6">
@@ -46,7 +47,7 @@
                             </div>
                         </div>
                     </form>
-                    <form action="settings/users/delete" method="POST">
+                    <form action="/settings/users/delete" method="POST">
                         <h4>Delete your Account</h4>
                         <div class="input-field col s12">
                             <input id="username" type="text" class="validate" name="username" placeholder="Type your username to confirm" required>

@@ -24,7 +24,8 @@ var upload = multer({storage: storage});
 router.get('/', function(req, res, next) {
   //Ensure they are logged in, TODO check if they are admin
   if(req.session.auth) {
-    res.render('settings', {session: req.session, config: config});
+    res.render('settings', {session: req.session, config: config, greeting: res.header.greeting ? JSON.parse(res.header.greeting) : null});
+    delete res.header.greeting
   } else {
     res.header.continue = '/settings';
     res.redirect('/login');
@@ -33,7 +34,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/config/edit', (req, res, next) => {
   if(req.session.auth) {
-    res.render('configedit', {session: req.session, config: config});
+    res.render('configedit', {session: req.session, config: config, greeting: null});
   } else {
     res.header.continue = '/settings/config/edit';
     res.redirect('/login');
@@ -68,7 +69,8 @@ router.post('/keys/delete', (req, res, next) => {
   if(req.session.auth) {
     db.deleteApiKey(req.body.key).then((result) => {
       console.log(result);  
-      res.send('Deleted');
+      res.header.greeting = JSON.stringify({message: 'Deleted key', color: 'green'});
+      res.redirect('/settings')
     }).catch((err) => {
       console.error(err);
       res.status = 500;
@@ -84,10 +86,12 @@ router.post('/keys/delete', (req, res, next) => {
 router.post('/users/create', (req, res, next) => {
   if(req.session.auth) {  
     if(req.body.newpassword !== req.body.confirm) {
-      res.send('Password and confirm password do not match.');
+      res.header.greeting = JSON.stringify({message: 'Passwords do not match', color: 'red'});
+      res.redirect('/settings')
     } else {
       db.generateUser(req.body.newusername, req.body.newpassword, false, 'users').then(() => {
-        res.send('Account created.');
+        res.header.greeting = JSON.stringify({message: 'Created new user', color: 'green'});
+        res.redirect('/settings')
       }).catch((err) => {
         res.status = 500;
         res.send(err);
@@ -108,13 +112,15 @@ router.post('/users/modify', (req, res, next) => {
     if(req.body.newpassword === req.body.confirm) {
       console.log('Updating');
       db.updatePassword(req.session.auth.username, req.body.newpassword).then(() => {
-        res.send('Updated password');
+        res.header.greeting = JSON.stringify({message: 'Password updated', color: 'green'});
+        res.redirect('/settings')
       }).catch((err) => {
         res.status = 500;
         res.send('error: ' + JSON.stringify(err));
       });
     } else {
-      res.send('Password and confirm password do not match');
+      res.header.greeting = JSON.stringify({message: 'Passwords do not match', color: 'red'});
+      res.redirect('/settings')
     }
   } else {
     res.status = 403;
@@ -135,7 +141,8 @@ router.post('/users/delete', (req, res, next) => {
       });
     } else {
       res.status = 403;
-      res.send('You cannot delete other users');
+      res.header.greeting = JSON.stringify({message: 'You cannot delete other users', color: 'red'});
+      res.redirect('/settings')
     }
   } else {
     res.status = 403;
@@ -148,7 +155,8 @@ router.post('/users/delete', (req, res, next) => {
 router.post('/config/reload', (req, res, next) => {
   if(req.session.auth) {
     config.reload();
-    res.send('Configuration reloaded.  New config:' + JSON.stringify(config));
+    res.header.greeting = JSON.stringify({message: 'Reloaded configuration', color: 'green'});
+    res.redirect('/settings')
   } else {
     res.status = 403;
     res.send('Reloading the config requires auth');
@@ -169,7 +177,8 @@ router.post('/config/update', (req, res, next) => {
 
     console.log('finished writing new configuration');
 
-    res.send('wrote file.  new config will not take effect until config is reloaded');
+    res.header.greeting = JSON.stringify({message: 'Updated configuration', color: 'green'});
+    res.redirect('/settings')
   } else {
     res.status = 403;
     res.send('Updating the config requires auth');
@@ -179,7 +188,8 @@ router.post('/config/update', (req, res, next) => {
 
 router.post('/config/newjob', upload.single('script'), (req, res, next) => {
   if(req.session.auth) {
-    res.send('File uploaded?');
+    res.header.greeting = JSON.stringify({message: 'Uploaded file', color: 'green'});
+    res.redirect('/settings')
   } else {
     res.status = 403;
     res.send('Uploading new jobs requires auth');

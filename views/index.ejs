@@ -13,6 +13,8 @@
         
         
         <%- include('navbar', {session: session, links: [{name: 'API', ref: '/api'}, {name: 'Settings', ref: '/settings'}, {name: 'Logout', ref: '/login/logout'}]});%>
+        <%- include('greeter', {greeting})%>
+
         <section class="white">
             <div class="container">
                 <div class="row" id="instr-display">
@@ -27,6 +29,7 @@
                                 </select>
                             </div>
                             <div class="row">
+                                <!-- ARGS INPUT -------------------------------------------------------------------- -->
                                 <div class="input-field col s12" id="args-input">
                                 
                                     <% config.operations.forEach((x) => {%>
