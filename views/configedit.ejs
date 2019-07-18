@@ -1,0 +1,27 @@
+<html>
+<head>
+    <%- include('head', {title: 'Config Editor'})%>
+</head>
+<body>
+<%- include('navbar', {session: session, links: [{name: 'API', ref: '/api'}, {name: 'Settings', ref: '/settings'}, {name: 'Logout', ref: '/login/logout'}]});%>
+<div class="container">
+
+    <h2>Config Editor</h2>
+    <p class="red-text">Note: This editor uses JSON, unlike the text file, which is written in HJSON</p>
+
+    <div class="row">
+        <textarea class="materialize-textarea code-text" form="editor" name="config" id="config-editor" wrap="soft">
+            <%=JSON.stringify(config, null, 4)%>
+        </textarea>
+        <form action="/settings/config/update" method="POST" id="editor">
+            <input type="file" name="file" class="btn">
+            <input type="text" name="test">
+            <input type="submit" class="btn">
+        </form>
+
+    </div>
+</div>
+
+<%- include('footer', {session: session}) %>
+</body>
+</html>

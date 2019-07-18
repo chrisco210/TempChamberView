@@ -4,6 +4,9 @@ var DB = require('../src/db');
 var db = new DB();
 var crypto = require('crypto');
 var config = require('../src/config');
+var hjson = require('hjson');
+var fs = require('fs');
+var path = require('path');
 
 /* GET settings page. */
 router.get('/', function(req, res, next) {
@@ -18,7 +21,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/config/edit', (req, res, next) => {
   if(req.session.auth) {
-    res.render('')
+    res.render('configedit', {session: req.session, config: config});
   } else {
     res.header.continue = '/settings/config/edit';
     res.redirect('/login');
@@ -138,7 +141,31 @@ router.post('/config/reload', (req, res, next) => {
     res.status = 403;
     res.send('Reloading the config requires auth');
   }
+});
 
+//Update the configuration
+router.post('/config/update', (req, res, next) => {
+  if (req.session.auth) {
+    console.log('writing new config...');
+    fs.writeFileSync(path.join(__dirname, '../config.hjson'), hjson.stringify(JSON.parse(req.body.config)), (err) => {
+      if (err) {
+        res.status = 500;
+        res.send(JSON.stringify(err));
+        console.error(err);
+      }
+    });
+
+    console.log('finished writing new configuration');
+
+    res.send('wrote file.  new config will not take effect until config is reloaded');
+  } else {
+    res.status = 403;
+    res.send('Updating the config requires auth');
+
+  }
+});
+
+router.post('/config/newjob', (req, res, next) => {
 
 });
 module.exports = router;

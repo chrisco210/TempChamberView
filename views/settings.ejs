@@ -97,20 +97,32 @@
                             </div>
                         </div>
                     </form>
-                    <!-- CONFIGURATION ---------------------------------------------------------------->
-                    <h2>Configuration</h2>
+                </div>
+            </div>
+            <div class="row">
+                <!-- CONFIGURATION ---------------------------------------------------------------->
+                <h2>Configuration/Jobs</h2>
+                <div class="col s12 m6 l6">
                     <form action="/settings/config/reload" method="POST">
                         <input type="submit" class="btn" name="reload" value="Reload config" >
                     </form>
-                    <form action="/settings/config/edit" method="GET">
-                        <h4>Current Configuration:</h4>
-                        <p><%=JSON.stringify(config)%></p>
-                        <input type="submit" class="btn" value="edit">
-                    </form>
 
-
-
+                    <h4>Current Configuration:</h4>
+                    <p class="code-text"><%=JSON.stringify(config)%></p>
+                    <a class="btn" href="/settings/config/edit">Edit</a>
                 </div>
+                <div class="col s12 m6 l6">
+                    <form action="/settings/config/newjob" method="POST">
+                        <h4>Upload Job Script</h4>
+                        <p>
+                            Upload a new javascript file that can be run as a job.  Note that you still have to add the
+                            job in the configuration file after uploading the script.
+                        </p>
+                        <input type="file" name="file">
+                        <input type="submit" value="upload" class="btn">
+                    </form>
+                </div>
+
             </div>
         </div>
 

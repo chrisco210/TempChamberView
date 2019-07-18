@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall": "node ./scripts/postinstall.js && npm run-script generate-scss",
+    "postinstall": "node ./scripts/postinstall.js && npm run-script generate-scss && cp node_modules/materialize-css/dist/js/materialize.js public/javascripts/",
     "generate-scss": "scss -t compressed public/scss/materialize.scss public/css/materialize.css",
     "generate-config": "node ./scripts/genconfig.js",
     "generate-database": "node ./scripts/gendatabase.js",

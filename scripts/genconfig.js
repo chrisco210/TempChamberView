@@ -1,6 +1,6 @@
 //Script to be ran after install
 var fs = require('fs');
-var path = require('path');
+    var path = require('path');
 const hjson = require('hjson');
 
 var args = process.argv.slice(2);
