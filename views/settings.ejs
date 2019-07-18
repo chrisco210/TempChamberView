@@ -112,13 +112,13 @@
                     <a class="btn" href="/settings/config/edit">Edit</a>
                 </div>
                 <div class="col s12 m6 l6">
-                    <form action="/settings/config/newjob" method="POST">
+                    <form action="/settings/config/newjob" method="POST" enctype="multipart/form-data">
                         <h4>Upload Job Script</h4>
                         <p>
                             Upload a new javascript file that can be run as a job.  Note that you still have to add the
                             job in the configuration file after uploading the script.
                         </p>
-                        <input type="file" name="file">
+                        <input type="file" name="script">
                         <input type="submit" value="upload" class="btn">
                     </form>
                 </div>

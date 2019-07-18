@@ -7,6 +7,18 @@ var config = require('../src/config');
 var hjson = require('hjson');
 var fs = require('fs');
 var path = require('path');
+var multer  = require('multer');
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'src/jobs/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+});
+
+var upload = multer({storage: storage});
 
 /* GET settings page. */
 router.get('/', function(req, res, next) {
@@ -165,7 +177,12 @@ router.post('/config/update', (req, res, next) => {
   }
 });
 
-router.post('/config/newjob', (req, res, next) => {
-
+router.post('/config/newjob', upload.single('script'), (req, res, next) => {
+  if(req.session.auth) {
+    res.send('File uploaded?');
+  } else {
+    res.status = 403;
+    res.send('Uploading new jobs requires auth');
+  }
 });
 module.exports = router;
