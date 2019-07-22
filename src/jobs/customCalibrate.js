@@ -6,7 +6,7 @@ all subsequent are values to go to.
 
 
 let cycleTime = process.argv[2];
-let rotations = process.argv.slice(3);
+let rotations = process.argv[3].split(',');
 
 var five = require("johnny-five");
 var board = new five.Board({repl: false, debug: true});
