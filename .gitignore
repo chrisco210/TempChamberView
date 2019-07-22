@@ -11,3 +11,4 @@ public/scss/.sass-cache/
 public/javascripts/webindex.render.js
 .idea/
 public/javascripts/materialize.js
+npm-debug.log
