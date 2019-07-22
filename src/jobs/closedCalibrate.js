@@ -32,9 +32,12 @@ var opts = {
 function adjust(tempTarget, stepper) {
     request(requestOptions).then((res) => {
         let temp = JSON.parse(res).temperature['converted-value'];
-        let diff = temp - tempTarget;
+        let diff = tempTarget - temp;
+
+        console.log(`Found difference of ${diff}`);
 
         if(Math.abs(diff) > ACCURACY) {
+            console.log(`Stepping ${diff * SENSITIVITY} steps`);
             stepper.rpm(STEPPER_RPM).ccw().step(diff * SENSITIVITY, () => {});
         }
     }).catch((err) => {
