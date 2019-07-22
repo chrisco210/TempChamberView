@@ -49,8 +49,11 @@ function updateSensorData() {
                 first = false;
             } else {
                 $('#tab-container').html(totalCards);
+                M.toast({html: 'Updated sensor data.', classes: 'green'});
             }
             $('.tabs').tabs();
+
+
             
         
         } else {

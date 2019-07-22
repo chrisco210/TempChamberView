@@ -60,8 +60,15 @@ router.get('/instructions/delete', (req, res, next) => {
     console.log('Deleting instruction: ' + req.query.inst);
     if(req.session.auth) {
         console.log(req.body);
+        if(req.query.inst === 0) {
+            console.log('deleting running instruction');
 
-        manager.removeInstruction(req.query.inst);
+            manager.stopJob();
+        } else {
+            console.log('Deleting instruction.');
+            manager.removeInstruction(req.query.inst);
+        }
+
         
         res.redirect('/');
     } else {

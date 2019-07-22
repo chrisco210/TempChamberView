@@ -9,11 +9,11 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="javascripts/ejs.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
-        <script type="text/javascript" src="javascripts/webindex<%=config.production ? '.render' : ''%>.js"></script>
-        
         
         <%- include('navbar', {session: session, links: [{name: 'API', ref: '/api'}, {name: 'Settings', ref: '/settings'}, {name: 'Logout', ref: '/login/logout'}]});%>
         <%- include('greeter', {greeting})%>
+        <script type="text/javascript" src="javascripts/webindex<%=config.production ? '.render' : ''%>.js"></script>
+
 
         <section class="white">
             <div class="container">

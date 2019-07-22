@@ -12,9 +12,11 @@ let ACCURACY = process.argv[3];
 // The timeout between corrections
 let TIMEOUT = process.argv[4] * 1000 * 60;
 //The temperature to target
-let HOLD = process.argv[5];
+let HOLD = process.argv[5] * 1000 * 60;
 //Temperatures to target
 let TEMPS = process.argv[6].split(',');
+
+console.log(`Sensitivity: ${SENSITIVITY}, Accuracy: ${ACCURACY}, Timeout: ${TIMEOUT}, Hold: ${HOLD}, Temps: ${TEMPS}`);
 
 var request = require('request-promise');
 
@@ -69,12 +71,9 @@ board.on('ready', () => {
     console.log('Setting interval');
     setInterval(() => {
         let toTarget = Math.floor(adjustmentCount * TIMEOUT / HOLD);
-        if(toTarget == TEMPS.length) {
+        if(toTarget === TEMPS.length) {
             process.exit();
         }
         adjust(TEMPS[toTarget], stepper);
     }, TIMEOUT);
 });
-
-
-

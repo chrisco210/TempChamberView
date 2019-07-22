@@ -82,7 +82,10 @@ class Manager {
      * @param {number} instruction the index of the instruction to remove
      */
     removeInstruction(instruction) {
+
         this.instructionStack.splice(instruction, 1);
+
+
         console.log(`New instrman state: ${JSON.stringify(this.instructionStack)}`);
     }
 }
