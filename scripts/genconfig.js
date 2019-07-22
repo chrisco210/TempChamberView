@@ -65,7 +65,8 @@ var defaultConfig = {
                 {name: "sensitivity", desc: "The ratio of turns/degC that will be used", type: "number", typedesc: "Ratio of turns/degC"},
                 {name: "accuracy", desc: "Minimum temperature difference to correct for", type: "number", typedesc: "degC"},
                 {name: "timeout", desc: "Timeout between corrections", type: "number", typedesc: "minutes"},
-                {name: "target", desc: "The temperature to target", type: "number", typedesc: "degC"}
+                {name: "hold", desc: "How long each temperature target will be targeted", type: "number", typedesc: "minutes"},
+                {name: "temps", desc: "A comma separated list of temperatures to target", type: "text", typedesc: "comma-seperated degC"}
             ]
         }
 
