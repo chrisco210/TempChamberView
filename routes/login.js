@@ -2,12 +2,13 @@ var express = require('express');
 var router = express.Router();
 var DB = require('../src/db');
 var db = new DB();
+var config = require('../src/config');
 
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) { 
-    res.render('login', {con: res.header.continue, greeting: {message: `Redirecting to ${res.header.continue}`}});
+    res.render('login', {con: res.header.continue, greeting: {message: `Redirecting to ${res.header.continue}`}, isProduction: config.production});
 });
 
 //validate provided creds here

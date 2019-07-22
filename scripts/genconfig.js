@@ -52,7 +52,13 @@ var defaultConfig = {
     operations: [
         { options: [{ name: "turns", type: "number", desc: "The number of turns", typedesc: "number"}], name: "settemp", desc: "Set the temperature of the chamber using the number of turns", file: "src/jobs/settemp" },
         { options: [{name: "timeout", desc: "The timeout in between temperature changes in minutes", type: "number", typedesc: "minutes"}], name: "Calibration", desc: "Run temperature egg calibration routine.", file: "src/jobs/calibrate" },
-        { options: [{ name: "test1", type: "text" }, { name: "test2", type: "text" }], name: "test", file: "src/jobs/test.js" }
+        { options: [{ name: "test1", type: "text" }, { name: "test2", type: "text" }], name: "test", file: "src/jobs/test.js" },
+        { name: "customCal", desc: "Perform a calibration routine using custom step sizes",
+            options: [
+                {name: "timeout", desc: "The timeout in between temperature changes in minutes", type: "number", typedesc: "minutes"},
+                {name: "stepLocations", desc: "The rotations that the stepper will move.", type: "text", typedesc:"Comma separated list of stepper directions"}
+            ]
+        }
     ],
     secret: {
         extern: false,
