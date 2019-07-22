@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
   //Ensure they are logged in, TODO check if they are admin
   if(req.session.auth) {
     res.render('settings', {session: req.session, config: config, greeting: res.header.greeting ? JSON.parse(res.header.greeting) : null});
-    delete res.header.greeting
+    delete res.header.greeting;
   } else {
     res.header.continue = '/settings';
     res.redirect('/login');
@@ -34,7 +34,8 @@ router.get('/', function(req, res, next) {
 
 router.get('/config/edit', (req, res, next) => {
   if(req.session.auth) {
-    res.render('configedit', {session: req.session, config: config, greeting: null});
+    res.render('configedit', {session: req.session, config: config, greeting: res.header.greeting ? JSON.parse(res.header.greeting) : null});
+    delete res.header.greeting;
   } else {
     res.header.continue = '/settings/config/edit';
     res.redirect('/login');

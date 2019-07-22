@@ -58,7 +58,17 @@ var defaultConfig = {
                 {name: "timeout", desc: "The timeout in between temperature changes in minutes", type: "number", typedesc: "minutes"},
                 {name: "stepLocations", desc: "The rotations that the stepper will move.", type: "text", typedesc:"Comma separated list of stepper directions"}
             ]
+        },
+        {
+            name: "ClosedCalibration", desc: "Closed loop calibration", file: "src/jobs/closedCalibrate",
+            options: [
+                {name: "sensitivity", desc: "The ratio of turns/degC that will be used", type: "number", typedesc: "Ratio of turns/degC"},
+                {name: "accuracy", desc: "Minimum temperature difference to correct for", type: "number", typedesc: "degC"},
+                {name: "timeout", desc: "Timeout between corrections", type: "number", typedesc: "minutes"},
+                {name: "target", desc: "The temperature to target", type: "number", typedesc: "degC"}
+            ]
         }
+
     ],
     secret: {
         extern: false,

@@ -36,9 +36,10 @@ board.on('ready', () => {
         setTimeout(() => {
             stepper.rpm(STEPPER_RPM).ccw().step(rotations[i], () => {});
 
-            if(i == rotations.length - 1) {
-                process.exit();
-            }
+
         }, cycleTime * i * 1000)
+        if(i == rotations.length - 1) {
+            setTimeout(() => {process.exit();}, cycleTime * (i + 1) * 1000);
+        }
     }
 });
