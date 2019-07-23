@@ -136,6 +136,34 @@ web to access it from anywhere.
 ## First time login
 The default username for login is root, the default password is password.  You can (and should) change the password in the settings panel.
 
+# Default Jobs
+## settemp
+Rotates the dial a number of turns.  Negative numbers go ccw, Positive numbers to cw.
+## Calibration
+Run the default calibration routine
+## CustomCalibration
+Run a custom calibration routine using a number of turns separated by commas.  
+## ClosedCalibration
+Run a calibration routine controlled by a closed-loop system.  
+### Arguments
+#### Sensitivity
+The ratio of turns to degrees that will be used to figure out how many turns will be done on each adjustment.
+
+A good number to use is 6.
+#### Accuracy
+The minimum difference between the actual temperature and the target temperature that will be adjusted for.
+
+Usually 1 degree is sufficient.
+#### Timeout
+The amount of time in between temperature adjustments.
+
+4 minutes is a good time to use.
+#### Hold
+The amount of time each temperature will be targeted for.
+#### Targets
+A comma-separated list of values that will be targeted. Eg:
+`0,10,20,30,40,25`
+
 # Temperature Chamber API 
 ## Instruction API
 ### api/instructions/recent
