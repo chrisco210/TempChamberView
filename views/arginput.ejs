@@ -2,7 +2,7 @@
 <%=operation.desc%>
 <% if(operation.options.length !== 0) {%>
 <%operation.options.forEach((optObj) => {%>
-    <input class="tooltipped" name="<%=optObj.name%>" type="<%=optObj.type%>" placeholder="<%=optObj.name%> (<%=optObj.typedesc === null ? optObj.type : optObj.typedesc%>)" id="<%=optObj.name%>"<%-optObj.desc ? `data-position="top" data-tooltip="${optObj.desc}"`: ''%>>
+    <input class="tooltipped" step="any" name="<%=optObj.name%>" type="<%=optObj.type%>" placeholder="<%=optObj.name%> (<%=optObj.typedesc === null ? optObj.type : optObj.typedesc%>)" id="<%=optObj.name%>"<%-optObj.desc ? `data-position="top" data-tooltip="${optObj.desc}"`: ''%>>
 
 <%});%>
 <%}%>
